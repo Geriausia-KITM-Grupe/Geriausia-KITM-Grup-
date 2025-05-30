@@ -24,33 +24,32 @@ git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
 cd "JiraEventManager"
 2. Install dependencies:
 - Backend:
-cd backend
-npm install
- - Frontend:
-powershell
-cd ../frontend
-npm install
+- cd backend
+- npm install
+- Frontend:
+- cd ../frontend
+- npm install
 3. Set up environment variables:
 - Copy/make .env in both backend and frontend and fill in your values.
 4. Start the app:
 - Backend:
-cd ../backend
-npx nodemon
- - Frontend:
-cd ../frontend
-npm run dev
+- cd ../backend
+- npx nodemon
+Frontend:
+- cd ../frontend
+- npm run dev
 
 ## How to Push, Make a Branch, and Push to Git
 
 1. Create a new branch:
 
-git checkout -b your-branch-name
+- git checkout -b your-branch-name
 
 2. Add and commit your changes:
 
-git add .
-git commit -m "Describe your changes"
+- git add .
+- git commit -m "Describe your changes"
 
 
 3. Push your branch to GitHub:
-git push -u origin your-branch-name
+- git push -u origin your-branch-name
