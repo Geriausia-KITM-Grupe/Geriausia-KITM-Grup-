@@ -3,19 +3,19 @@
 - React + Vite frontend in /frontend
 - Node.js + Express + MongoDB backend in /backend
 
-File/Folder Descriptions
-backend/controllers/: API logic (userController.js, etc.)
-backend/models/: Mongoose schemas
-backend/routes/: Express route definitions
-backend/middleware/: Custom Express middleware
-backend/api/: API entry point or grouping
-backend/config/: Configuration files
-backend/server.js: Main backend entry point
-backend/.env: Backend environment variables (not tracked in git)
-frontend/src/: React source code
-frontend/.env: Frontend environment variables (not tracked in git)
-.gitignore: Files/folders to ignore in git
-
+| Path                    | Description                                         |
+|-------------------------|-----------------------------------------------------|
+| backend/controllers/    | API logic (userController.js, etc.)                 |
+| backend/models/         | Mongoose schemas                                    |
+| backend/routes/         | Express route definitions                           |
+| backend/middleware/     | Custom Express middleware                           |
+| backend/api/            | API entry point or grouping                         |
+| backend/config/         | Configuration files                                 |
+| backend/server.js       | Main backend entry point                            |
+| backend/.env            | Backend environment variables (not tracked in git)  |
+| frontend/src/           | React source code                                   |
+| frontend/.env           | Frontend environment variables (not tracked in git) |
+| .gitignore              | Files/folders to ignore in git   
 
 ## Setup Instructions
 
