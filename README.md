@@ -20,11 +20,11 @@
 ## Setup Instructions
 
 1. Clone the repository:
-git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
-cd "JiraEventManager"
+- git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
+- cd "JiraEventManager"
 2. Install dependencies:
 - Backend:
-- cd backend
+- cd ../backend
 - npm install
 - Frontend:
 - cd ../frontend
@@ -35,7 +35,7 @@ cd "JiraEventManager"
 - Backend:
 - cd ../backend
 - npx nodemon
-Frontend:
+- Frontend:
 - cd ../frontend
 - npm run dev
 
