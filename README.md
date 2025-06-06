@@ -9,6 +9,7 @@
 | backend/models/         | Mongoose schemas                                    |
 | backend/routes/         | Express route definitions                           |
 | backend/middleware/     | Custom Express middleware                           |
+| backend/functions/      | Custom functions                                    |
 | backend/api/            | API entry point or grouping                         |
 | backend/config/         | Configuration files                                 |
 | backend/server.js       | Main backend entry point                            |
