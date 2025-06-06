@@ -2,6 +2,7 @@ const User = require("../models/User");
 const { generateToken } = require("../functions/generateToken");
 const bcryptjs = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
+const { validateEmail } = require("../functions/emailRegix");
 
 // Register a new user
 // @POST /users
@@ -15,8 +16,8 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please fill all the fields");
   }
-
-  if (!email.includes("@")) {
+  // check if email have @
+  if (!validateEmail(email)) {
     res.status(400);
     throw new Error("Please enter a valid email address");
   }
