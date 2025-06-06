@@ -3,10 +3,10 @@ const Layout = ({ children }) => (
     <header className="header">
       <div className="header__logo">Eventify</div>
       <nav className="header__nav" aria-label="Main navigation">
-        <a href="template.html" className="header__nav-link">
+        <a href="/" className="header__nav-link">
           Home
         </a>
-        <a href="eventList.html" className="header__nav-link">
+        <a href="events" className="header__nav-link">
           Events
         </a>
         <a href="#" className="header__nav-link">
