@@ -49,7 +49,7 @@ const UserTab = () => {
         <a href="login.html" className="user-dropdown__link" role="menuitem">
           Login
         </a>
-        <a href="register.html" className="user-dropdown__link" role="menuitem">
+        <a href="register" className="user-dropdown__link" role="menuitem">
           Register
         </a>
       </div>
