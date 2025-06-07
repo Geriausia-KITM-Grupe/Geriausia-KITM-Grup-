@@ -60,4 +60,28 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser };
+// login user
+// @ Post /users
+
+const loginUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user && (await bcryptjs.compare(password, user.password))) {
+    res.json({
+      message: "Login successfully",
+      _id: user.id,
+      userName: user.userName,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      token: generateToken(user.id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Incorrect email or password");
+  }
+});
+
+module.exports = { registerUser, loginUser };
