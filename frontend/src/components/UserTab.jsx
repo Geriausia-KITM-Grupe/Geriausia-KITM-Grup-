@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const UserTab = () => {
   const [open, setOpen] = useState(false);
@@ -46,12 +47,12 @@ const UserTab = () => {
         ref={dropdownRef}
         style={{ display: open ? "block" : "none" }}
       >
-        <a href="login.html" className="user-dropdown__link" role="menuitem">
+        <Link to="/login" className="user-dropdown__link" role="menuitem">
           Login
-        </a>
-        <a href="register" className="user-dropdown__link" role="menuitem">
+        </Link>
+        <Link to="/register" className="user-dropdown__link" role="menuitem">
           Register
-        </a>
+        </Link>
       </div>
     </div>
   );

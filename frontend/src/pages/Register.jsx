@@ -40,7 +40,9 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/register",
+        `${
+          process.env.REACT_APP_BACKEND_URL || "http://localhost:3000"
+        }/users/register`,
         {
           userName: form.username,
           email: form.email,
