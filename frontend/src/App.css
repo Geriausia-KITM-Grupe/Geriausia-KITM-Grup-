@@ -1349,6 +1349,61 @@ body {
   border-color: #38c96b;
   transform: translateY(-2px) scale(1.03);
 }
+/* Custom alert styles - BEM naming, matches app style */
+.alert {
+  position: relative;
+  margin: 18px auto 18px auto;
+  padding: 18px 44px 18px 18px;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  background: #e53935;
+  color: #fff;
+  border: 1.5px solid #e5393544;
+  box-shadow: 0 2px 12px #e5393511, 0 2px 8px #4ef37b11;
+  animation: alert-fade-in 0.5s;
+  width: 80%;
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.alert--success {
+  background: #4ef37b;
+  color: #181c23;
+  border: 1.5px solid #4ef37b66;
+  box-shadow: 0 2px 12px #4ef37b22, 0 2px 8px #4ef37b11;
+}
+
+.alert__close {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.18s;
+}
+.alert__close:hover {
+  opacity: 1;
+}
+
+@keyframes alert-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 @media (max-width: 900px) {
   .main-section {
