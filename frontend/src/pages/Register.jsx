@@ -40,9 +40,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        `${
-          process.env.REACT_APP_BACKEND_URL || "http://localhost:3000"
-        }/users/register`,
+        "http://localhost:3000/users/register",
         {
           userName: form.username,
           email: form.email,
@@ -57,9 +55,12 @@ const Register = () => {
         setAlert(response.data?.message || "User registration failed.");
       }
     } catch (error) {
-      setAlert(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
+      const errorMessage =
+        error.response && error.response.data && error.response.data.message
+          ? error.response.data.message
+          : "An error occurred. Please try again.";
+
+      setAlert(errorMessage);
     }
   };
 
@@ -71,7 +72,9 @@ const Register = () => {
       {alert && (
         <div
           className={`alert ${
-            alert.includes("success") ? "alert--success" : "alert--error"
+            alert.toLowerCase().includes("successful")
+              ? "alert--success"
+              : "alert--error"
           }`}
         >
           {alert}
@@ -157,9 +160,9 @@ const Register = () => {
           Register
         </button>
         <div className="register__links">
-          {/* <Link to="/login" className="register__link">
+          <Link to="/login" className="register__link">
             Already have an account? Login
-          </Link> */}
+          </Link>
         </div>
       </form>
     </section>

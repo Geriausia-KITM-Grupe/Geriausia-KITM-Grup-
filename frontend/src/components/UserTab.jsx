@@ -3,8 +3,26 @@ import { Link } from "react-router-dom";
 
 const UserTab = () => {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const btnRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setOpen(false);
+      } else {
+        setUser(null);
+      }
+    };
+
+    handleStorageChange(); // Initial check
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -21,6 +39,12 @@ const UserTab = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setOpen(false);
+  };
+
   return (
     <div
       className="header__user-menu"
@@ -34,10 +58,18 @@ const UserTab = () => {
         type="button"
         ref={btnRef}
       >
-        <span aria-hidden="true">
-          <i className="fas fa-user"></i>
-        </span>
-        <span className="sr-only">User account</span>
+        {user ? (
+          <span className="user-dropdown__name">
+            {user.userName ? user.userName.slice(0, 2).toUpperCase() : ""}
+          </span>
+        ) : (
+          <>
+            <span aria-hidden="true">
+              <i className="fas fa-user"></i>
+            </span>
+            <span className="sr-only">User account</span>
+          </>
+        )}
       </button>
       <div
         id="userDropdown"
@@ -45,14 +77,54 @@ const UserTab = () => {
         role="menu"
         aria-labelledby="userMenuBtn"
         ref={dropdownRef}
-        style={{ display: open ? "block" : "none" }}
+        style={{
+          display: open ? "block" : "none",
+          maxHeight: "200px",
+          overflowY: "auto",
+        }}
       >
-        <Link to="/login" className="user-dropdown__link" role="menuitem">
-          Login
-        </Link>
-        <Link to="/register" className="user-dropdown__link" role="menuitem">
-          Register
-        </Link>
+        {user ? (
+          <>
+            <span
+              className="user-dropdown__name"
+              style={{ color: "black", padding: "8px 16px", display: "block" }}
+            >
+              <i className="fas fa-user" style={{ marginRight: "8px" }}></i>
+              {user.userName}
+            </span>
+
+            <a
+              className="user-dropdown__link"
+              style={{ cursor: "pointer" }}
+              role="menuitem"
+              onClick={handleLogout}
+            >
+              <i
+                className="fas fa-sign-out-alt"
+                style={{ marginRight: "8px" }}
+              ></i>
+              Logout
+            </a>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="user-dropdown__link" role="menuitem">
+              <i
+                className="fas fa-sign-in-alt"
+                style={{ marginRight: "8px" }}
+              ></i>
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="user-dropdown__link"
+              role="menuitem"
+            >
+              <i className="fas fa-id-badge" style={{ marginRight: "8px" }}></i>
+              Register
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

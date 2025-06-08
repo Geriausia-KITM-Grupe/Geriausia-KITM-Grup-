@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
-
 const Login = () => {
   const [form, setForm] = useState({
     email: "",
@@ -26,28 +25,54 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        `${
-        "http://localhost:3000"
-        }/users/login`,
+        `${"http://localhost:3000"}/users/login`,
         {
           email: form.email,
           password: form.password,
-        },
+        }
       );
 
       if (response.status === 200 && response.data && response.data.token) {
-        setAlert("Login successful!");
+        setAlert("Login success!");
+
+        // Save all user data to localStorage in one object
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            _id: response.data._id,
+            userName: response.data.userName,
+            email: response.data.email,
+            role: response.data.role,
+            status: response.data.status,
+            token: response.data.token,
+          })
+        );
+
         // Redirect user
-        navigate("/events"); 
+        setAlert("Login success! Redirecting...");
+
+        window.dispatchEvent(new Event("storage"));
+        setTimeout(() => {
+          navigate("/events");
+        }, 1500);
       } else {
         setAlert(response.data?.message || "Login failed.");
       }
     } catch (error) {
-        console.error("Login error:", error.response?.data || error.message);
-        setAlert(
-            error.response?.data?.message || `An error occurred: ${error.message}`
-  );
-}
+      // Extract a user-friendly error message from the backend response
+      let message = "An error occurred. Please try again.";
+      if (error.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (typeof error.response?.data === "string") {
+        // Try to extract message from HTML error response
+        const match = error.response.data.match(/Error:\s*([^<]+)/);
+        if (match && match[1]) {
+          message = match[1].trim();
+        }
+      }
+
+      setAlert(message);
+    }
   };
 
   return (
