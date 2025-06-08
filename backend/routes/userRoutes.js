@@ -5,6 +5,7 @@ const {
   registerUser,
   loginUser,
   getAllUsers,
+  logoutUser,
 } = require("../controllers/userController.js");
 
 // Route to register a new user
@@ -13,5 +14,7 @@ const {
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/all", getAllUsers);
+router.post('/logout', logoutUser);
+
 
 module.exports = router;
