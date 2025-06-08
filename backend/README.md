@@ -1,22 +1,34 @@
+## 🚀 Features
 
--backend/controllers/
--userController.js: Handles user registration, login, logout, update, delete, and (stub) password reset/email verification. Checks for unique username/email, hashes passwords, and ensures only active users can log in.
--eventController.js: Handles event creation, update, deletion, approval, and listing. Users can create/update/delete their own events (with title, description, category, location, time, picture). Admins can approve events and delete any event.
--eventCategoryController.js: Handles CRUD for event categories. Only admins can create, update, or delete categories.
--adminController.js: Handles admin dashboard (stub) and allows admins to delete users.
--backend/models/
--User.js: Mongoose schema for users (username, email, password, role, status, timestamps).
--Event.js: Mongoose schema for events (title, description, picture, category, location, time, approved, createdBy, timestamps).
--EventCategory.js: Mongoose schema for event categories (name, description).
--backend/routes/
--userRoutes.js: Express routes for user registration, login, logout, password reset/email verification (stubs), get all users (admin), update user, and delete user (admin).
--eventRoutes.js: Express routes for event creation (with picture upload), update, delete (admin or creator), approval (admin), and listing (public and admin). Uses multer for image upload with type/size validation.
--eventCategoryRoutes.js: Express routes for event category CRUD (admin protected for create/update/delete).
--adminRoutes.js: Express routes for admin dashboard (stub) and deleting users (admin only).
--backend/functions/
--generateToken.js: Generates JWT tokens for authentication.
--emailRegix.js: Simple email validation function.\
--backend/config/
--db.js: Connects to MongoDB using the MONGO_DB environment variable.
--backend/server.js
--Main backend entry point. Sets up Express, connects to MongoDB, configures middleware (CORS, morgan, cookie-parser), serves static uploads, and mounts all routes.
+- **User Management:** Register, login, logout, update, delete (admin), JWT authentication, role-based access.
+- **Event Management:** Users can create, update, and delete their own events (title, description, category, location, time, picture). Admins can approve events and delete any event.
+- **Event Categories:** Admins can create, update, and delete event categories. Anyone can view categories.
+- **File Uploads:** Event images (only images, max 5MB) are uploaded and served from `/uploads`.
+- **Admin Controls:** Admin dashboard (stub), delete users, approve events, manage categories.
+- **Security:** JWT authentication, admin-only routes, input validation, centralized error handling.
+- **CORS & Logging:** CORS enabled for frontend, request logging with morgan.
+
+---
+
+## 🛠️ Key Files
+
+- **controllers/**
+  - `userController.js`: User registration, login, logout, update, delete, password reset/email verification (stubs).
+  - `eventController.js`: Event creation, update, deletion, approval, and listing.
+  - `eventCategoryController.js`: CRUD for event categories (admin only for create/update/delete).
+  - `adminController.js`: Admin dashboard (stub), delete users.
+- **models/**
+  - `User.js`: User schema (username, email, password, role, status, timestamps).
+  - `Event.js`: Event schema (title, description, picture, category, location, time, approved, createdBy, timestamps).
+  - `EventCategory.js`: Event category schema (name, description).
+- **routes/**
+  - `userRoutes.js`: User registration, login, logout, password reset/email verification (stubs), get all users (admin), update user, delete user (admin).
+  - `eventRoutes.js`: Event creation (with picture upload), update, delete (admin or creator), approval (admin), listing (public and admin).
+  - `eventCategoryRoutes.js`: CRUD for event categories (admin protected for create/update/delete).
+  - `adminRoutes.js`: Admin dashboard (stub), delete users (admin only).
+- **functions/**
+  - `generateToken.js`: JWT token generation.
+  - `emailRegix.js`: Simple email validation.
+- **config/**
+  - `db.js`: MongoDB connection logic.
+- **server.js**: Main backend entry point, sets up Express, connects to MongoDB, configures middleware, serves static uploads, and mounts all routes.
