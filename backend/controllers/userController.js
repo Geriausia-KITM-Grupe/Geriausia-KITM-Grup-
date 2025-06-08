@@ -5,45 +5,41 @@ const asyncHandler = require("express-async-handler");
 const { validateEmail } = require("../functions/emailRegix");
 
 // Register a new user
-// @POST /users
-// @access Public
-
 const registerUser = asyncHandler(async (req, res) => {
   const { userName, email, password } = req.body;
 
-  // Validate user input
   if (!userName || !email || !password) {
     res.status(400);
     throw new Error("Please fill all the fields");
   }
-  // check if email have @
   if (!validateEmail(email)) {
     res.status(400);
     throw new Error("Please enter a valid email address");
   }
 
-  // Check if user already exists
-  const userExists = await User.findOne({ userName, email });
-  if (userExists) {
+  // Check for existing username or email
+  const userNameExists = await User.findOne({ userName });
+  if (userNameExists) {
     res.status(400);
-    throw new Error("User already exists");
+    throw new Error("Username already exists");
   }
-
-  // Hash the password
+  const emailExists = await User.findOne({ email });
+  if (emailExists) {
+    res.status(400);
+    throw new Error("Email already exists");
+  }
 
   const salt = await bcryptjs.genSalt(10);
   const hashedPassword = await bcryptjs.hash(password, salt);
 
-  // Create a new user
   const user = await User.create({
-    userName: userName,
-    email: email,
+    userName,
+    email,
     password: hashedPassword,
-    role: "user", // Default role
-    status: true, // Default status
+    role: "user",
+    status: true,
   });
 
-  // Generate a token
   const token = generateToken(user.id);
   if (user) {
     res.status(201).json({
@@ -52,7 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       status: user.status,
-      token: token, // Send the generated token
+      token: token,
     });
   } else {
     res.status(400);
@@ -61,14 +57,15 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // login user
-// @ Post /users
-
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
   const user = await User.findOne({ email });
 
   if (user && (await bcryptjs.compare(password, user.password))) {
+  if (!user.status) {
+    res.status(403);
+    throw new Error("Account is inactive. Contact admin.");
+  }
     res.json({
       message: "Login successfully",
       _id: user.id,
@@ -84,20 +81,77 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// logout user
-
+// logout user (clear cookie if present)
 const logoutUser = asyncHandler(async (req, res) => {
+  res.clearCookie("token");
   res.json({ message: "Logout successful" });
 });
 
-
 // GET users list (all users)
-// @ GET /users
-
 const getAllUsers = asyncHandler(async (req, res) => {
-  const usersList = await User.find();
-
+  const usersList = await User.find().select("-password");
   res.status(200).json(usersList);
 });
 
-module.exports = { registerUser, loginUser, getAllUsers, logoutUser };
+// Update user info
+const updateUser = asyncHandler(async (req, res) => {
+  const { userName, email, password } = req.body;
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  if (req.user.id !== user.id && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Not authorized to update this user");
+  }
+  if (userName) user.userName = userName;
+  if (email) user.email = email;
+  if (password) {
+    const salt = await bcryptjs.genSalt(10);
+    user.password = await bcryptjs.hash(password, salt);
+  }
+  await user.save();
+  res.json({
+    _id: user.id,
+    userName: user.userName,
+    email: user.email,
+    role: user.role,
+    status: user.status,
+  });
+});
+
+// Delete user (admin only)
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  await user.deleteOne();
+  res.json({ message: "User deleted" });
+});
+
+// Password reset (stub)
+const resetPassword = asyncHandler(async (req, res) => {
+  // Here you would send a reset email or token
+  res.json({ message: "Password reset functionality not implemented yet." });
+});
+
+// Email verification (stub)
+const verifyEmail = asyncHandler(async (req, res) => {
+  // Here you would verify the user's email
+  res.json({ message: "Email verification functionality not implemented yet." });
+});
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getAllUsers,
+  logoutUser,
+  updateUser,
+  deleteUser,
+  resetPassword,
+  verifyEmail,
+};

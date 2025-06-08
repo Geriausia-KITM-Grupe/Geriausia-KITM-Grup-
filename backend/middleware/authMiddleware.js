@@ -8,8 +8,16 @@ const protect = asyncHandler(async (req, res, next) => {
     req.user = response; // Attach user info to the request object
     next(); // Proceed to the next middleware or route handler
   } else {
-    res.send(status, response); // Send the error response
+    res.status(status).send(response); // Send the error response
   }
 });
 
-module.exports = { protect };
+const adminOnly = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as admin" });
+  }
+};
+
+module.exports = { protect, adminOnly };
