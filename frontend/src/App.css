@@ -1462,6 +1462,47 @@ body {
   color: #232733;
   transform: translateY(-2px) scale(1.04);
 }
+.popup-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(24, 28, 35, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  gap: 18px;
+}
+
+.popup-loader__spinner {
+  width: 54px;
+  height: 54px;
+  border: 5px solid #232733;
+  border-top: 5px solid #4ef37b;
+  border-radius: 50%;
+  animation: login-spin 1s linear infinite;
+  margin-bottom: 8px;
+}
+
+.popup-loader__text {
+  color: #4ef37b;
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 16px #4ef37b33, 0 0 4px #4ef37b, 0 0 12px #fff2;
+}
+
+@keyframes login-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 @media (max-width: 900px) {
   .main-section {
@@ -1506,6 +1547,22 @@ body {
     align-items: flex-start;
     padding: 20px 10px;
     gap: 10px;
+  }
+
+  .header__user-btn {
+    position: absolute;
+    top: -60px;
+    left: 30px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .event-list__title {
+    margin-top: 5px;
+  }
+  .user-dropdown {
+    position: absolute;
+    left: 260px;
   }
   .header__nav {
     gap: 18px;
@@ -1563,6 +1620,23 @@ body {
   .admin-users h1 {
     font-size: 1.4rem;
   }
+
+  .header__search-form {
+    position: relative;
+    left: 60px;
+  }
+  .header__user-btn {
+    position: absolute;
+    left: -5px;
+  }
+  .user-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  .header__search-button {
+    margin-top: 8px;
+  }
 }
 @media (max-width: 600px) {
   body {
@@ -1577,6 +1651,27 @@ body {
     font-size: 1.3rem;
     margin-bottom: 18px;
   }
+
+  .header__search-form {
+    position: relative;
+    left: 60px;
+  }
+  .header__user-btn {
+    position: absolute;
+    left: -5px;
+  }
+  .user-dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  .header__search-button {
+    margin-top: 8px;
+  }
+  .event-list__title {
+    margin-top: 5px;
+  }
+
   .register {
     max-width: 98vw;
     padding: 18px 6vw 22px 6vw;

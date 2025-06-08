@@ -8,6 +8,7 @@ const Login = () => {
     password: "",
   });
   const [alert, setAlert] = useState("");
+  const [loading, setLoading] = useState(false); // <-- Add loading state
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -33,8 +34,6 @@ const Login = () => {
       );
 
       if (response.status === 200 && response.data && response.data.token) {
-        setAlert("Login success!");
-
         // Save all user data to localStorage in one object
         localStorage.setItem(
           "user",
@@ -48,11 +47,13 @@ const Login = () => {
           })
         );
 
+        setLoading(true); // Show loader
         // Redirect user
-        setAlert("Login success! Redirecting...");
+        ///setAlert("Login success! Redirecting...");
 
         window.dispatchEvent(new Event("storage"));
         setTimeout(() => {
+          setLoading(false);
           navigate("/events");
         }, 1500);
       } else {
@@ -79,7 +80,7 @@ const Login = () => {
     <section className="login">
       <h2 className="login__title">Login to Your Account</h2>
 
-      {alert && (
+      {alert && !loading && (
         <div
           className={`alert ${
             alert.includes("success") ? "alert--success" : "alert--error"
@@ -92,6 +93,12 @@ const Login = () => {
         </div>
       )}
 
+      {loading && (
+        <div className="popup-loader">
+          <div className="popup-loader__spinner"></div>
+          <span className="popup-loader__text">Logging in...</span>
+        </div>
+      )}
       <form className="login__form" onSubmit={handleSubmit} autoComplete="on">
         <div className="login__form-group">
           <label htmlFor="login-email" className="login__label">
