@@ -84,6 +84,13 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// logout user
+
+const logoutUser = asyncHandler(async (req, res) => {
+  res.json({ message: "Logout successful" });
+});
+
+
 // GET users list (all users)
 // @ GET /users
 
@@ -93,4 +100,4 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.status(200).json(usersList);
 });
 
-module.exports = { registerUser, loginUser, getAllUsers };
+module.exports = { registerUser, loginUser, getAllUsers, logoutUser };
