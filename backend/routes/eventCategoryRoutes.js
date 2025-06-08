@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const eventCategoryController = require("../controllers/eventCategoryController");
-const { protect, adminOnly } = require("../middleware/authMiddleware"); // if you want to protect admin routes
+const { protect, adminOnly } = require("../middleware/authMiddleware");
 
 // Public routes
 router.get("/", eventCategoryController.getAllCategories);

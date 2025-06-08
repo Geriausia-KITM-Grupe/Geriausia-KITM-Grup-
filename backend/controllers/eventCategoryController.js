@@ -1,35 +1,26 @@
-import EventCategory from "../models/EventCategory.js";
-
+const EventCategory = require("../models/EventCategory");
+const asyncHandler = require("express-async-handler");
 /**
  * Get all event categories
  */
-const getAllCategories = async (req, res) => {
-  try {
-    const categories = await EventCategory.find();
-    res.json(categories);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+const getAllCategories = asyncHandler(async (req, res) => {
+  const categories = await EventCategory.find();
+  res.json(categories);
+});
 
 /**
  * Get a single event category by ID
  */
-const getCategoryById = async (req, res) => {
-  try {
-    const category = await EventCategory.findById(req.params.id);
-    if (!category)
-      return res.status(404).json({ message: "Category not found" });
-    res.json(category);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+const getCategoryById = asyncHandler(async (req, res) => {
+  const category = await EventCategory.findById(req.params.id);
+  if (!category) return res.status(404).json({ message: "Category not found" });
+  res.json(category);
+});
 
 /**
  * Create a new event category (admin only)
  */
-const createCategory = async (req, res) => {
+const createCategory = asyncHandler(async (req, res) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied" });
   }
@@ -37,57 +28,43 @@ const createCategory = async (req, res) => {
     name: req.body.name,
     description: req.body.description,
   });
-  try {
-    const newCategory = await category.save();
-    res.status(201).json(newCategory);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+  const newCategory = await category.save();
+  res.status(201).json(newCategory);
+});
 
 /**
  * Update an event category (admin only)
  */
-const updateCategory = async (req, res) => {
+const updateCategory = asyncHandler(async (req, res) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied" });
   }
-  try {
-    const category = await EventCategory.findById(req.params.id);
-    if (!category)
-      return res.status(404).json({ message: "Category not found" });
+  const category = await EventCategory.findById(req.params.id);
+  if (!category) return res.status(404).json({ message: "Category not found" });
 
-    if (req.body.name !== undefined) category.name = req.body.name;
-    if (req.body.description !== undefined)
-      category.description = req.body.description;
+  if (req.body.name !== undefined) category.name = req.body.name;
+  if (req.body.description !== undefined)
+    category.description = req.body.description;
 
-    const updatedCategory = await category.save();
-    res.json(updatedCategory);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+  const updatedCategory = await category.save();
+  res.json(updatedCategory);
+});
 
 /**
  * Delete an event category (admin only)
  */
-const deleteCategory = async (req, res) => {
+const deleteCategory = asyncHandler(async (req, res) => {
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied" });
   }
-  try {
-    const category = await EventCategory.findById(req.params.id);
-    if (!category)
-      return res.status(404).json({ message: "Category not found" });
+  const category = await EventCategory.findById(req.params.id);
+  if (!category) return res.status(404).json({ message: "Category not found" });
 
-    await category.remove();
-    res.json({ message: "Category deleted" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+  await category.remove();
+  res.json({ message: "Category deleted" });
+});
 
-export {
+module.exports = {
   getAllCategories,
   getCategoryById,
   createCategory,
