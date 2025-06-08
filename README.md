@@ -10,7 +10,7 @@
 | backend/routes/         | Express route definitions                           |
 | backend/middleware/     | Custom Express middleware                           |
 | backend/functions/      | Custom functions                                    |
-| backend/api/            | API entry point or grouping                         |
+| backend/uploads         | Store event images	                                |
 | backend/config/         | Configuration files                                 |
 | backend/server.js       | Main backend entry point                            |
 | backend/.env            | Backend environment variables (not tracked in git)  |
@@ -22,7 +22,7 @@
 
 1. Clone the repository:
 - git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
-- cd "JiraEventManager"
+- cd "Geriausia-KITM-Grup"
 2. Install dependencies:
 - Backend:
 - cd ../backend

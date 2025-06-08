@@ -1,0 +1,22 @@
+
+-backend/controllers/
+-userController.js: Handles user registration, login, logout, update, delete, and (stub) password reset/email verification. Checks for unique username/email, hashes passwords, and ensures only active users can log in.
+-eventController.js: Handles event creation, update, deletion, approval, and listing. Users can create/update/delete their own events (with title, description, category, location, time, picture). Admins can approve events and delete any event.
+-eventCategoryController.js: Handles CRUD for event categories. Only admins can create, update, or delete categories.
+-adminController.js: Handles admin dashboard (stub) and allows admins to delete users.
+-backend/models/
+-User.js: Mongoose schema for users (username, email, password, role, status, timestamps).
+-Event.js: Mongoose schema for events (title, description, picture, category, location, time, approved, createdBy, timestamps).
+-EventCategory.js: Mongoose schema for event categories (name, description).
+-backend/routes/
+-userRoutes.js: Express routes for user registration, login, logout, password reset/email verification (stubs), get all users (admin), update user, and delete user (admin).
+-eventRoutes.js: Express routes for event creation (with picture upload), update, delete (admin or creator), approval (admin), and listing (public and admin). Uses multer for image upload with type/size validation.
+-eventCategoryRoutes.js: Express routes for event category CRUD (admin protected for create/update/delete).
+-adminRoutes.js: Express routes for admin dashboard (stub) and deleting users (admin only).
+-backend/functions/
+-generateToken.js: Generates JWT tokens for authentication.
+-emailRegix.js: Simple email validation function.\
+-backend/config/
+-db.js: Connects to MongoDB using the MONGO_DB environment variable.
+-backend/server.js
+-Main backend entry point. Sets up Express, connects to MongoDB, configures middleware (CORS, morgan, cookie-parser), serves static uploads, and mounts all routes.
