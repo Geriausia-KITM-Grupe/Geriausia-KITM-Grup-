@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 const UserTab = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false); // Loader state
   const btnRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -40,9 +41,13 @@ const UserTab = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setOpen(false);
+    setLoading(true); // Show loader
+    setTimeout(() => {
+      localStorage.removeItem("user");
+      setUser(null);
+      setOpen(false);
+      setLoading(false); // Hide loader after logout
+    }, 1200); // Simulate async logout, adjust as needed
   };
 
   return (
@@ -50,6 +55,12 @@ const UserTab = () => {
       className="header__user-menu"
       style={{ position: "relative", display: "inline-block" }}
     >
+      {loading && (
+        <div className="popup-loader">
+          <div className="popup-loader__spinner"></div>
+          <span className="popup-loader__text">Logging out...</span>
+        </div>
+      )}
       <button
         className="header__user-btn"
         aria-label="User account"
