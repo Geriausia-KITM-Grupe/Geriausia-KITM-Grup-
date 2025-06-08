@@ -12,7 +12,7 @@ const {
 } = require("../controllers/eventController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-// Multer config for file upload
+// Multer config for file upload with type/size validation
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../uploads"));
@@ -21,7 +21,18 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-const upload = multer({ storage });
+function fileFilter(req, file, cb) {
+  // Accept images only
+  if (!file.mimetype.startsWith("image/")) {
+    return cb(new Error("Only image files are allowed!"), false);
+  }
+  cb(null, true);
+}
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+});
 
 // Public: get all approved events
 router.get("/approved", getApprovedEvents);
@@ -38,7 +49,7 @@ router.get("/", protect, adminOnly, getAllEvents);
 // Admin: approve event
 router.patch("/:id/approve", protect, adminOnly, approveEvent);
 
-// Admin: delete event
-router.delete("/:id", protect, adminOnly, deleteEvent);
+// Admin or creator: delete event
+router.delete("/:id", protect, deleteEvent);
 
 module.exports = router;

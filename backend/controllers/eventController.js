@@ -1,23 +1,24 @@
 const asyncHandler = require("express-async-handler");
 const Event = require("../models/Event");
-const path = require("path");
 
 // Create event (user)
 const createEvent = asyncHandler(async (req, res) => {
-  const { title, description, category } = req.body;
+  const { title, description, category, location, time } = req.body;
   let picture = null;
   if (req.file) {
     picture = `/uploads/${req.file.filename}`;
   }
-  if (!title) {
+  if (!title || !location || !time) {
     res.status(400);
-    throw new Error("Title is required");
+    throw new Error("Title, location, and time are required");
   }
   const event = await Event.create({
     title,
     description,
     picture,
     category,
+    location,
+    time,
     createdBy: req.user._id,
     approved: false,
   });
@@ -50,7 +51,7 @@ const approveEvent = asyncHandler(async (req, res) => {
 
 // Update event (user or admin)
 const updateEvent = asyncHandler(async (req, res) => {
-  const { title, description, category } = req.body;
+  const { title, description, category, location, time } = req.body;
   let picture = null;
   if (req.file) {
     picture = `/uploads/${req.file.filename}`;
@@ -68,6 +69,8 @@ const updateEvent = asyncHandler(async (req, res) => {
   if (title) event.title = title;
   if (description) event.description = description;
   if (category) event.category = category;
+  if (location) event.location = location;
+  if (time) event.time = time;
   if (picture) event.picture = picture;
   // If user updates, event must be re-approved
   if (req.user.role !== "admin") event.approved = false;
@@ -75,12 +78,17 @@ const updateEvent = asyncHandler(async (req, res) => {
   res.json({ message: "Event updated", event });
 });
 
-// Delete event (admin)
+// Delete event (admin or creator)
 const deleteEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
   if (!event) {
     res.status(404);
     throw new Error("Event not found");
+  }
+  // Only creator or admin can delete
+  if (event.createdBy.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+    res.status(403);
+    throw new Error("Not authorized to delete this event");
   }
   await event.deleteOne();
   res.json({ message: "Event deleted" });

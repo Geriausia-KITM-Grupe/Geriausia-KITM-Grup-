@@ -6,6 +6,8 @@ const eventSchema = new mongoose.Schema(
     description: { type: String },
     picture: { type: String }, // URL or filename
     category: { type: String, required: false },
+    location: { type: String, required: true },
+    time: { type: Date, required: true },
     approved: { type: Boolean, default: false },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
