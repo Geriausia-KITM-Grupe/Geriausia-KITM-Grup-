@@ -103,7 +103,20 @@ const UserTab = () => {
               <i className="fas fa-user" style={{ marginRight: "8px" }}></i>
               {user.userName}
             </span>
-
+            {user.role === "admin" && (
+              <Link
+                to="/admin/dashboard"
+                className="user-dropdown__link"
+                style={{ cursor: "pointer" }}
+                role="menuitem"
+              >
+                <i
+                  className="fas fa-tachometer-alt"
+                  style={{ marginRight: "8px" }}
+                ></i>
+                Admin Dashboard
+              </Link>
+            )}
             <a
               className="user-dropdown__link"
               style={{ cursor: "pointer" }}
