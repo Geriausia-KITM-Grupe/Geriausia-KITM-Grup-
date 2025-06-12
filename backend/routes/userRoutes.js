@@ -21,7 +21,7 @@ router.post("/logout", logoutUser);
 router.post("/reset-password", resetPassword);
 router.post("/verify-email", verifyEmail);
 
-// Admin-protected route
+// Admin-protected route (supports pagination: ?page=1&limit=10)
 router.get("/", protect, adminOnly, getAllUsers);
 
 // User update (user or admin)

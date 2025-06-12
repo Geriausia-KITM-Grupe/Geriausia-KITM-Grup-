@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -27,6 +27,7 @@ app.use(cookieParser());
 // User routes
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/events", require("./routes/eventRoutes"));
+app.use("/api/event-likes", require("./routes/likeRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 
 app.use("/api/event-categories", require("./routes/eventCategoryRoutes"));
@@ -38,3 +39,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
