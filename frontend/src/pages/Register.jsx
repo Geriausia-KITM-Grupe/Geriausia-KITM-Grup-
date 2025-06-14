@@ -51,6 +51,12 @@ const Register = () => {
       // The backend returns 201 and user data with token on success
       if (response.status === 201 && response.data && response.data.token) {
         setAlert("Registration successful!");
+        setForm({
+          username: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
       } else {
         setAlert(response.data?.message || "User registration failed.");
       }
