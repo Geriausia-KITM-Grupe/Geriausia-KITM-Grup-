@@ -11,6 +11,7 @@ const SildeCover = ({ image, alt }) => {
             src={`http://localhost:3000${image}`}
             alt={alt}
             className="slideshow__img slideshow__img--desktop"
+            style={{ width: "380px", height: "600px" }}
           />
         </figure>
       </aside>

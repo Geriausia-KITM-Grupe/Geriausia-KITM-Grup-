@@ -2,6 +2,17 @@
 const Like = require("../models/Like");
 const Event = require("../models/Event");
 
+/**
+ * Check if the current user has liked a specific event.
+ * Responds with true or false.
+ */
+const getLikeStatus = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const eventId = req.params.id;
+
+  const liked = !!(await Like.findOne({ user: userId, event: eventId }));
+  res.json(liked);
+});
 // Toggle like for an event
 const toggleLike = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -39,4 +50,4 @@ const getEventLikes = asyncHandler(async (req, res) => {
   res.json({ likeCount, liked });
 });
 
-module.exports = { toggleLike, getEventLikes };
+module.exports = { toggleLike, getEventLikes, getLikeStatus };

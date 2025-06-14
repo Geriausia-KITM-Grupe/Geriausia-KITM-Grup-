@@ -6,16 +6,20 @@ import SilderControler from "./SilderControler";
 import SlideCover from "./SildeCover";
 import SlidePlaceHolder from "./SlidePlaceHolder";
 import SlideCoverPlaceHolder from "./SlideCoverPlaceHolder";
+import SliderLoader from "./SliderLoader";
 
 const Slider = () => {
   const [slides, setSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loading, setLoading] = useState(true);
   const intervalRef = useRef();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/events/approved")
-      .then((response) => {
+    const fetchSlides = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/events/approved"
+        );
         if (Array.isArray(response.data)) {
           setSlides(response.data);
         } else if (Array.isArray(response.data.events)) {
@@ -23,11 +27,14 @@ const Slider = () => {
         } else {
           setSlides([]);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         setSlides([]);
         console.error(error);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSlides();
   }, []);
 
   useEffect(() => {
@@ -46,14 +53,24 @@ const Slider = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
+  if (loading) {
+    return (
+      <div className="slideshow">
+        <div className="slideshow__slide slideshow__slide--active">
+          <SliderLoader />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="slideshow">
       {slides.length === 0 ? (
-        // Render placeholder Slide when no slides
         <>
-          <SlidePlaceHolder />
-          <SlideCoverPlaceHolder />
-          <SilderControler />
+          <div className={"slideshow__slide" + " slideshow__slide--active"}>
+            <SlidePlaceHolder />
+            <SlideCoverPlaceHolder />
+          </div>
         </>
       ) : (
         slides.map((slide, idx) => (
