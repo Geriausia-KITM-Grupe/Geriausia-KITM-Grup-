@@ -9,6 +9,7 @@ const {
   approveEvent,
   updateEvent,
   deleteEvent,
+  getApprovedEventsPaginated,
 } = require("../controllers/eventController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
@@ -37,6 +38,7 @@ const upload = multer({
 // Public: get all approved events
 router.get("/approved", getApprovedEvents);
 
+router.get("/approved/paginated", getApprovedEventsPaginated);
 // User: create event (with picture)
 router.post("/", protect, upload.single("picture"), createEvent);
 

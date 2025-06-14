@@ -33,19 +33,19 @@ const AddEvent = () => {
     }));
   };
 
-  const handleCategoryChange = (catName) => {
+  const handleCategoryChange = (catId) => {
     setForm((prev) => ({
       ...prev,
-      category: prev.category.includes(catName)
-        ? prev.category.filter((c) => c !== catName)
-        : [...prev.category, catName],
+      category: prev.category.includes(catId)
+        ? prev.category.filter((c) => c !== catId)
+        : [...prev.category, catId],
     }));
   };
 
-  const handleCategoryKeyDown = (e, catName) => {
+  const handleCategoryKeyDown = (e, catId) => {
     if (e.key === " " || e.key === "Enter") {
       e.preventDefault();
-      handleCategoryChange(catName);
+      handleCategoryChange(catId);
     }
   };
 
@@ -71,8 +71,8 @@ const AddEvent = () => {
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
       if (key === "category") {
-        // If backend expects array, use JSON.stringify
-        formData.append("category", JSON.stringify(value));
+        // Append each category as a separate field if backend expects array of values
+        value.forEach((cat) => formData.append("category", cat));
       } else if (value) {
         formData.append(key, value);
       }
@@ -81,7 +81,6 @@ const AddEvent = () => {
     try {
       await axios.post(API_URL, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           authorization: `Bearer ${token}`,
         },
       });
@@ -145,7 +144,7 @@ const AddEvent = () => {
               style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
             >
               {categories.map((cat) => {
-                const checked = form.category.includes(cat.name);
+                const checked = form.category.includes(cat._id);
                 return (
                   <label
                     key={cat._id}
@@ -163,13 +162,13 @@ const AddEvent = () => {
                       userSelect: "none",
                     }}
                     tabIndex={0}
-                    onKeyDown={(e) => handleCategoryKeyDown(e, cat.name)}
+                    onKeyDown={(e) => handleCategoryKeyDown(e, cat._id)}
                   >
                     <input
                       type="checkbox"
-                      value={cat.name}
+                      value={cat._id}
                       checked={checked}
-                      onChange={() => handleCategoryChange(cat.name)}
+                      onChange={() => handleCategoryChange(cat._id)}
                       style={{ marginRight: 6 }}
                       tabIndex={-1}
                     />

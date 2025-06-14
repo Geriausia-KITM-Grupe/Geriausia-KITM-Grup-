@@ -2,22 +2,7 @@ const Slide = ({ event, cats }) => {
   if (!event) {
     return <div className="event__error">No event data available.</div>;
   }
-  // Extract all phrases in double quotes from cats (string or array)
-  let masive = [];
-  if (typeof cats === "string") {
-    // Match all "..." phrases
-    masive = [...cats.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
-  } else if (Array.isArray(cats)) {
-    // If already array, filter for quoted phrases and remove quotes
-    masive = cats
-      .map((str) => {
-        const match = /^"(.*)"$/.exec(str);
-        return match ? match[1] : null;
-      })
-      .filter(Boolean);
-  }
 
-  // Example: cats = '"Hello men" "teas test"' => masive = ['Hello men', 'teas test']
   return (
     <article className="event">
       <header className="event__header">
@@ -25,11 +10,17 @@ const Slide = ({ event, cats }) => {
           {event.title || "Caloundra Music Festival 2025"}
         </h1>
         <ul className="event__meta" aria-label="Event categories">
-          {masive.map((cat, idx) => (
-            <li key={idx} className="event__meta-item">
-              {cat}
-            </li>
-          ))}
+          {event.category && event.category.length > 0 ? (
+            event.category.map((cat, idx) => (
+              <li key={cat._id || idx} className="event__meta-item">
+                {cat.name
+                  ? cat.name.charAt(0).toUpperCase() + cat.name.slice(1)
+                  : cat}
+              </li>
+            ))
+          ) : (
+            <li className="event__meta-item">No category</li>
+          )}
         </ul>
       </header>
       <section className="event__desc">
