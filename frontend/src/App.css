@@ -1621,7 +1621,76 @@ body {
     transform: rotate(360deg);
   }
 }
+.add-event-form {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #232733;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px #0002;
+  padding: 32px 28px 24px 28px;
+}
 
+.add-event-form__title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  color: #4ef37b;
+  text-align: center;
+}
+
+.add-event-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.add-event-form__label {
+  color: #b0b3b8;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.add-event-form__input,
+.add-event-form__textarea {
+  background: #181c23;
+  border: 1.5px solid #4ef37b55;
+  border-radius: 7px;
+  color: #fff;
+  font-size: 1.08rem;
+  padding: 12px 14px;
+  outline: none;
+  transition: border 0.18s;
+}
+
+.add-event-form__input:focus,
+.add-event-form__textarea:focus {
+  border-color: #4ef37b;
+  background: #222633;
+}
+
+.add-event-form__textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.add-event-form__btn {
+  margin-top: 10px;
+  width: 100%;
+  font-size: 1.08rem;
+  padding: 12px 0;
+  border-radius: 7px;
+  background: #4ef37b;
+  color: #181c23;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.add-event-form__btn:hover {
+  background: #38c96a;
+}
 @media (max-width: 900px) {
   .main-section {
     flex-direction: column;

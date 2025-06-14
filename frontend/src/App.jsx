@@ -14,6 +14,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageEventCategories from "./pages/admin/ManageEventCategories";
 import { UserAccounts } from "./pages/admin/UserAccounts";
+import AddEvent from "./pages/user/AddEvent";
 
 function App() {
   const location = useLocation();
@@ -31,6 +32,9 @@ function App() {
         <Route path="/events" element={<EventList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
+        {/*user routes*/}
+        <Route path="/user/add-event" element={<AddEvent />} />
 
         {/*admin routes*/}
         <Route path="/admin/dashboard" element={<Dashboard />} />
