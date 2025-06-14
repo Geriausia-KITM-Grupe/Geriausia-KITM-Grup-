@@ -9,7 +9,10 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 
-import AdminDashboard from "./pages/AdminDashboard";
+///Admin Pages
+import Dashboard from "./pages/admin/Dashboard";
+import ManageEvents from "./pages/admin/ManageEvents";
+import ManageEventCategories from "./pages/admin/ManageEventCategories";
 
 function App() {
   const location = useLocation();
@@ -22,11 +25,18 @@ function App() {
   return (
     <div key={fadeKey} className="page-fade">
       <Routes location={location}>
+        {/*default routes - not auth...*/}
         <Route path="/" element={<Slider />} />
         <Route path="/events" element={<EventList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+        {/*admin routes*/}
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/manage-events" element={<ManageEvents />} />
+        <Route path="/admin/categories" element={<ManageEventCategories />} />
+
+        {/* Routes error handling */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
