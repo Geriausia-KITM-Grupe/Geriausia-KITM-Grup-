@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 /**
  * Get all event categories
  */
-const getAllCategories = asyncHandler(async (req, res) => {
+const getAllCategories = asyncHandler(async (_, res) => {
   const categories = await EventCategory.find();
   res.json(categories);
 });

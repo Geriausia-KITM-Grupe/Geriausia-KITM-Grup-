@@ -103,6 +103,20 @@ const UserTab = () => {
               <i className="fas fa-user" style={{ marginRight: "8px" }}></i>
               {user.userName}
             </span>
+
+            <Link
+              to="/user/add-event"
+              className="user-dropdown__link"
+              style={{ cursor: "pointer" }}
+              role="menuitem"
+            >
+              <i
+                className="fas fa-calendar-plus"
+                style={{ marginRight: "8px" }}
+              ></i>
+              Add Event
+            </Link>
+
             {user.role === "admin" && (
               <Link
                 to="/admin/dashboard"

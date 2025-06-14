@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Card from "../components/Card";
 
 const EventList = () => {
@@ -6,11 +7,20 @@ const EventList = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setEvents([{}, {}]); // Replace with real event data
-      setLoading(false);
-    }, 1200);
+    axios
+      .get("http://localhost:3000/api/events/approved") // Adjust the URL to match your backend endpoint
+      .then((res) => {
+        // If res.data is { events: [...] }
+        if (Array.isArray(res.data)) {
+          setEvents(res.data);
+        } else if (Array.isArray(res.data.events)) {
+          setEvents(res.data.events);
+        } else {
+          setEvents([]);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   return (
@@ -27,7 +37,7 @@ const EventList = () => {
               </li>
             ))
           : events.map((event, i) => (
-              <li className="event-list__item" key={i}>
+              <li className="event-list__item" key={event.id || i}>
                 <Card {...event} />
               </li>
             ))}
