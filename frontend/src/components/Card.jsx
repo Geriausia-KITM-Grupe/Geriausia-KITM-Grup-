@@ -1,16 +1,51 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 const Card = ({ title, picture, time, location, description, _id }) => {
   const heartRef = useRef(null);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const handleFavClick = () => {
-    const heart = heartRef.current;
-    if (heart) {
-      heart.style.color =
-        heart.style.color === "rgb(231, 76, 60)" ? "#fff" : "#e74c3c";
-      heart.classList.remove("pop");
-      void heart.offsetWidth;
-      heart.classList.add("pop");
+  useEffect(() => {
+    if (!user.token) return;
+    const fetchFavoriteStatus = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:3000/api/event-likes/${_id}/liked`,
+          {
+            headers: { authorization: `Bearer ${user.token}` },
+          }
+        );
+        setIsFavorited(data); // data is a boolean
+      } catch {
+        setIsFavorited(false);
+      }
+    };
+    fetchFavoriteStatus();
+  }, [_id, user.token]);
+
+  useEffect(() => {
+    if (heartRef.current) {
+      heartRef.current.style.color = isFavorited ? "#e74c3c" : "#fff";
+    }
+  }, [isFavorited]);
+
+  const handleFavClick = async () => {
+    if (!user.token) return;
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000/api/event-likes/${_id}/like`,
+        {},
+        { headers: { authorization: `Bearer ${user.token}` } }
+      );
+      setIsFavorited(data.liked); // expects { liked: true/false }
+      if (heartRef.current) {
+        heartRef.current.classList.remove("pop");
+        void heartRef.current.offsetWidth;
+        heartRef.current.classList.add("pop");
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
     }
   };
 
