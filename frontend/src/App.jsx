@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import ManageEvents from "./pages/admin/ManageEvents";
 import ManageEventCategories from "./pages/admin/ManageEventCategories";
+import { UserAccounts } from "./pages/admin/UserAccounts";
 
 function App() {
   const location = useLocation();
@@ -35,6 +36,7 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/manage-events" element={<ManageEvents />} />
         <Route path="/admin/categories" element={<ManageEventCategories />} />
+        <Route path="/admin/user-accounts" element={<UserAccounts />} />
 
         {/* Routes error handling */}
         <Route path="*" element={<NotFound />} />
