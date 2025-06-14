@@ -32,9 +32,9 @@ const Dashboard = () => {
             <div>
               <h2>User Accounts</h2>
               <p>View and manage user accounts.</p>
-              <a href="adminUser.html" className="admin-dashboard__btn">
+              <Link to="/admin/user-accounts" className="admin-dashboard__btn">
                 Go
-              </a>
+              </Link>
             </div>
           </div>
           <div className="admin-dashboard__card">
