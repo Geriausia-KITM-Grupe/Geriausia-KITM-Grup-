@@ -1,4 +1,5 @@
-const Slide = ({ event, cats }) => {
+//const Slide = ({ event, cats }) => {  neaiski role mete cat errora 
+  const Slide = ({ event }) => {
   if (!event) {
     return <div className="event__error">No event data available.</div>;
   }

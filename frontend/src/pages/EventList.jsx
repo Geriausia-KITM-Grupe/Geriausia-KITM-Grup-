@@ -53,33 +53,33 @@ const EventList = () => {
     setSort(e.target.value);
     setPage(1);
   };
-
-  let masive = [];
-  if (typeof cats === "string") {
-    // Try to parse as JSON array, fallback to splitting by comma
-    try {
-      const parsed = JSON.parse(cats);
-      if (Array.isArray(parsed)) {
-        masive = parsed;
-      } else {
-        masive = [cats];
-      }
-    } catch {
-      masive = cats
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-    }
-  } else if (Array.isArray(cats)) {
-    // Handle array of objects or strings
-    if (cats.length > 0 && typeof cats[0] === "object" && cats[0] !== null) {
-      // Try to extract 'name' or 'title' property
-      masive = cats.map((cat) => cat.name || cat.title || "");
-    } else {
-      masive = cats;
-    }
-    masive = masive.filter(Boolean);
-  }
+// masive comentintas, neaiski role meta errora
+  // let masive = [];
+  // if (typeof cats === "string") {
+  //   // Try to parse as JSON array, fallback to splitting by comma
+  //   try {
+  //     const parsed = JSON.parse(cats);
+  //     if (Array.isArray(parsed)) {
+  //       masive = parsed;
+  //     } else {
+  //       masive = [cats];
+  //     }
+  //   } catch {
+  //     masive = cats
+  //       .split(",")
+  //       .map((s) => s.trim())
+  //       .filter(Boolean);
+  //   }
+  // } else if (Array.isArray(cats)) {
+  //   // Handle array of objects or strings
+  //   if (cats.length > 0 && typeof cats[0] === "object" && cats[0] !== null) {
+  //     // Try to extract 'name' or 'title' property
+  //     masive = cats.map((cat) => cat.name || cat.title || "");
+  //   } else {
+  //     masive = cats;
+  //   }
+  //   masive = masive.filter(Boolean);
+  // }
   return (
     <section className="event-list">
       <h2 className="event-list__title">Upcoming Events</h2>

@@ -114,7 +114,25 @@ const UserTab = () => {
                 className="fas fa-calendar-plus"
                 style={{ marginRight: "8px" }}
               ></i>
-              Add Event
+              Pridėti renginį
+            </Link>
+            <Link
+              to="/user/panel"
+              className="user-dropdown__link"
+              style={{ cursor: "pointer" }}
+              role="menuitem"
+            >
+              <i className="fas fa-calendar" style={{ marginRight: "8px" }}></i>
+              Mano renginiai
+            </Link>
+            <Link
+              to="/user/favorites"
+              className="user-dropdown__link"
+              style={{ cursor: "pointer" }}
+              role="menuitem"
+            >
+              <i className="fas fa-heart" style={{ marginRight: "8px" }}></i>
+              Mano mėgstami
             </Link>
 
             {user.role === "admin" && (
