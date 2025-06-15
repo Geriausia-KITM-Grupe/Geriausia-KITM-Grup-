@@ -20,7 +20,7 @@ export const UserAccounts = () => {
         });
 
         setUsers(data);
-      } catch (error) {
+      } catch {
         // Handle error as needed
         setUsers([]);
       }
@@ -50,7 +50,7 @@ export const UserAccounts = () => {
       );
       setShowForm(false);
       setSelectedUser(null);
-    } catch (err) {
+    } catch {
       // Optionally handle error
       alert("Failed to update user role");
     }

@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Slider from "./components/silder/Slider";
+
 import EventList from "./pages/EventList";
+import EventDetails from "./pages/EventDetails";
+import UserPanel from "./pages/user/UserPanel";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -30,6 +33,8 @@ function App() {
         {/*default routes - not auth...*/}
         <Route path="/" element={<Slider />} />
         <Route path="/events" element={<EventList />} />
+      <Route path="/events/:id" element={<EventDetails />} />
+      <Route path="/user/panel" element={<UserPanel />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
