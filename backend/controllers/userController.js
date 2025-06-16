@@ -62,10 +62,10 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await bcryptjs.compare(password, user.password))) {
-  if (!user.status) {
-    res.status(403);
-    throw new Error("Account is inactive. Contact admin.");
-  }
+    if (!user.status) {
+      res.status(403);
+      throw new Error("Account is inactive. Contact admin.");
+    }
     res.json({
       message: "Login successfully",
       _id: user.id,
@@ -112,6 +112,14 @@ const updateUser = asyncHandler(async (req, res) => {
     const salt = await bcryptjs.genSalt(10);
     user.password = await bcryptjs.hash(password, salt);
   }
+  // Only admin can change role
+  if (req.body.role && req.user.role === "admin") {
+    user.role = req.body.role;
+  }
+  // Allow admin to update status (ban/disable user)
+  if (typeof req.body.status === "boolean" && req.user.role === "admin") {
+    user.status = req.body.status;
+  }
   await user.save();
   res.json({
     _id: user.id,
@@ -142,7 +150,9 @@ const resetPassword = asyncHandler(async (req, res) => {
 // Email verification (stub)
 const verifyEmail = asyncHandler(async (req, res) => {
   // Here you would verify the user's email
-  res.json({ message: "Email verification functionality not implemented yet." });
+  res.json({
+    message: "Email verification functionality not implemented yet.",
+  });
 });
 
 module.exports = {
