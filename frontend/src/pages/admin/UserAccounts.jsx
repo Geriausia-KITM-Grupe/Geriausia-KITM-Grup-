@@ -56,6 +56,21 @@ export const UserAccounts = () => {
     }
   };
 
+  // delete user as admin
+
+  const handleDelete = async (userId) => {
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    try {
+      await axios.delete(`http://localhost:3000/api/admin/user/${userId}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      setUsers((prev) => prev.filter((u) => u._id !== userId));
+    } catch {
+      alert("Failed to delete user");
+    }
+  };
+
   return (
     <AdminRoute>
       <section className="admin-events">
@@ -150,6 +165,7 @@ export const UserAccounts = () => {
                       <button
                         className="admin-users__delete-btn"
                         title="Delete"
+                        onClick={() => handleDelete(usr._id)}
                       >
                         <i className="fas fa-trash"></i>
                       </button>
