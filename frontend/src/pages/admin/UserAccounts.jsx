@@ -147,6 +147,7 @@ export const UserAccounts = () => {
                 <th>User</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Last login</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -167,7 +168,7 @@ export const UserAccounts = () => {
                       <td>
                         <b>{idx + 1}.</b>
                       </td>
-                      <td colSpan={4} style={{ padding: 0 }}>
+                      <td colSpan={5} style={{ padding: 0 }}>
                         <div
                           className="admin-category-form__input"
                           style={{
@@ -264,6 +265,11 @@ export const UserAccounts = () => {
                       </td>
                       <td style={{ textTransform: "capitalize" }}>
                         {usr.role}
+                      </td>
+                      <td>
+                        {usr.lastLogin
+                          ? new Date(usr.lastLogin).toLocaleString()
+                          : "N/A"}
                       </td>
                       <td>
                         <button
