@@ -38,6 +38,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password: hashedPassword,
     role: "user",
     status: true,
+    lastLogin: null,
   });
 
   const token = generateToken(user.id);
@@ -48,6 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       status: user.status,
+      lastLogin: user.lastLogin,
       token: token,
     });
   } else {
@@ -66,6 +68,8 @@ const loginUser = asyncHandler(async (req, res) => {
       res.status(403);
       throw new Error("Account is inactive. Contact admin.");
     }
+    user.lastLogin = new Date();
+    await user.save();
     res.json({
       message: "Login successfully",
       _id: user.id,
@@ -73,6 +77,7 @@ const loginUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       status: user.status,
+      lastLogin: user.lastLogin,
       token: generateToken(user.id),
     });
   } else {
