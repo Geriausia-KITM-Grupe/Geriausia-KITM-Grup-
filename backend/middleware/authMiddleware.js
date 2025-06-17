@@ -6,6 +6,9 @@ const protect = asyncHandler(async (req, res, next) => {
 
   if (status === 200) {
     req.user = response; // Attach user info to the request object
+    if (req.user.status === false) {
+      return res.status(403).json({ message: "User is banned" });
+    }
     next(); // Proceed to the next middleware or route handler
   } else {
     res.status(status).send(response); // Send the error response
