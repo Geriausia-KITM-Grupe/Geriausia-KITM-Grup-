@@ -7,7 +7,6 @@ import Slider from "./components/silder/Slider";
 
 import EventList from "./pages/EventList";
 import EventDetails from "./pages/EventDetails";
-import UserPanel from "./pages/user/UserPanel";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -18,6 +17,8 @@ import ManageEvents from "./pages/admin/ManageEvents";
 import ManageEventCategories from "./pages/admin/ManageEventCategories";
 import { UserAccounts } from "./pages/admin/UserAccounts";
 import AddEvent from "./pages/user/AddEvent";
+import MyFavorites from "./pages/user/MyFavorites";
+import MyEvents from "./pages/user/MyEvents";
 
 function App() {
   const location = useLocation();
@@ -33,13 +34,14 @@ function App() {
         {/*default routes - not auth...*/}
         <Route path="/" element={<Slider />} />
         <Route path="/events" element={<EventList />} />
-      <Route path="/events/:id" element={<EventDetails />} />
-      <Route path="/user/panel" element={<UserPanel />} />
+        <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
         {/*user routes*/}
         <Route path="/user/add-event" element={<AddEvent />} />
+        <Route path="/user/my-favorites" element={<MyFavorites />} />
+        <Route path="/user/my-events" element={<MyEvents />} />
 
         {/*admin routes*/}
         <Route path="/admin/dashboard" element={<Dashboard />} />

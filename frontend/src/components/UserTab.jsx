@@ -117,22 +117,22 @@ const UserTab = () => {
               Pridėti renginį
             </Link>
             <Link
-              to="/user/panel"
+              to="/user/my-events"
               className="user-dropdown__link"
               style={{ cursor: "pointer" }}
               role="menuitem"
             >
               <i className="fas fa-calendar" style={{ marginRight: "8px" }}></i>
-              Mano renginiai
+              My Events
             </Link>
             <Link
-              to="/user/favorites"
+              to="/user/my-favorites"
               className="user-dropdown__link"
               style={{ cursor: "pointer" }}
               role="menuitem"
             >
               <i className="fas fa-heart" style={{ marginRight: "8px" }}></i>
-              Mano mėgstami
+              My Favorites
             </Link>
 
             {user.role === "admin" && (

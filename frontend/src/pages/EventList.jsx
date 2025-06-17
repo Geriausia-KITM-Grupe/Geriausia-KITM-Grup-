@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../components/Card";
 import Pagination from "../components/Pagination";
+import ShimmerLoader from "../components/ShimmerLoader";
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -53,33 +54,7 @@ const EventList = () => {
     setSort(e.target.value);
     setPage(1);
   };
-// masive comentintas, neaiski role meta errora
-  // let masive = [];
-  // if (typeof cats === "string") {
-  //   // Try to parse as JSON array, fallback to splitting by comma
-  //   try {
-  //     const parsed = JSON.parse(cats);
-  //     if (Array.isArray(parsed)) {
-  //       masive = parsed;
-  //     } else {
-  //       masive = [cats];
-  //     }
-  //   } catch {
-  //     masive = cats
-  //       .split(",")
-  //       .map((s) => s.trim())
-  //       .filter(Boolean);
-  //   }
-  // } else if (Array.isArray(cats)) {
-  //   // Handle array of objects or strings
-  //   if (cats.length > 0 && typeof cats[0] === "object" && cats[0] !== null) {
-  //     // Try to extract 'name' or 'title' property
-  //     masive = cats.map((cat) => cat.name || cat.title || "");
-  //   } else {
-  //     masive = cats;
-  //   }
-  //   masive = masive.filter(Boolean);
-  // }
+
   return (
     <section className="event-list">
       <h2 className="event-list__title">Upcoming Events</h2>
@@ -148,20 +123,15 @@ const EventList = () => {
       </div>
 
       <ul className="event-list__items">
-        {loading
-          ? Array.from({ length: itemsPerPage }).map((_, i) => (
-              <li className="event-list__item" key={i}>
-                <div
-                  className="shimmer-loader"
-                  style={{ height: 430, width: "100%" }}
-                />
-              </li>
-            ))
-          : events.map((event, i) => (
-              <li className="event-list__item" key={event.id || i}>
-                <Card {...event} />
-              </li>
-            ))}
+        {loading ? (
+          <ShimmerLoader mode="card" cards={6} />
+        ) : (
+          events.map((event, i) => (
+            <li className="event-list__item" key={event.id || i}>
+              <Card {...event} />
+            </li>
+          ))
+        )}
       </ul>
       <Pagination
         page={page}
