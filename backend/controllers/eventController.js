@@ -177,7 +177,9 @@ const deleteEvent = asyncHandler(async (req, res) => {
  * Get a single approved event by ID (public)
  */
 const getEventById = asyncHandler(async (req, res) => {
-  const event = await Event.findOne({ _id: req.params.id, approved: true }).populate("category", "name");
+  const event = await Event.findOne({ _id: req.params.id, approved: true })
+    .populate("category", "name")
+    .populate("createdBy", "userName email"); // <-- populate creator
   if (!event) {
     return res.status(404).json({ message: "Event not found" });
   }

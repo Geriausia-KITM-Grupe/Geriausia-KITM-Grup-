@@ -166,11 +166,11 @@ const EventDetails = () => {
         <ul className="event-details__highlights">
           <li className="event-details__highlight">
             <i className="fas fa-user event-details__icon"></i>
-            Created by: {event.createdBy?.userName || "Unknown"}
+            Created by: {event.createdBy?.userName || event.createdBy?.email || "Unknown"}
           </li>
           <li className="event-details__highlight">
             <i className="fas fa-info-circle event-details__icon"></i>
-            Status: {event.status}
+            Status: {event.approved ? "Approved" : "Pending Approval"}
           </li>
         </ul>
         <button
