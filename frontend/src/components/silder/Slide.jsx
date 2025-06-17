@@ -1,8 +1,17 @@
 //const Slide = ({ event, cats }) => {  neaiski role mete cat errora 
-  const Slide = ({ event }) => {
+import { useNavigate } from "react-router-dom";
+const Slide = ({ event }) => {
+  const navigate = useNavigate();
+
   if (!event) {
     return <div className="event__error">No event data available.</div>;
   }
+
+  const handleLookup = () => {
+    if (event._id) {
+      navigate(`/events/${event._id}`);
+    }
+  };
 
   return (
     <article className="event">
@@ -56,7 +65,7 @@
         </div>
       </section>
       <section className="event__cta-likes">
-        <button className="event__cta-btn">Lookup</button>
+        <button className="event__cta-btn" onClick={handleLookup}>Lookup</button>
       </section>
       <section className="event__share" aria-label="Share event">
         <span className="event__share-label">Share:</span>
