@@ -6,7 +6,7 @@ import Alert from "../../components/Alert";
 import ShimmerLoader from "../../components/ShimmerLoader";
 import ConfirmModal from "../../components/ConfirmModal";
 
-const API_URL = `${import.meta.env.VITE_BACKEND}event-categories`;
+const API_URL = `${import.meta.env.VITE_BACKEND}api/event-categories`;
 
 const ManageEventCategories = () => {
   const navigate = useNavigate();

@@ -25,7 +25,7 @@ const MyEvents = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND}events`,
+        `${import.meta.env.VITE_BACKEND}api/events`,
         {
           headers: { authorization: `Bearer ${user.token}` },
           params: { createdBy: user._id },
@@ -82,7 +82,7 @@ const MyEvents = () => {
         time: editForm.time ? new Date(editForm.time).toISOString() : null,
       };
       const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND}events/${eventId}`,
+        `${import.meta.env.VITE_BACKEND}api/events/${eventId}`,
         updatedEvent,
         { headers: { authorization: `Bearer ${user.token}` } }
       );
@@ -109,9 +109,12 @@ const MyEvents = () => {
   const handleRemoveLike = async (eventId) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      await axios.delete(`${import.meta.env.VITE_BACKEND}events/${eventId}`, {
-        headers: { authorization: `Bearer ${user.token}` },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND}api/events/${eventId}`,
+        {
+          headers: { authorization: `Bearer ${user.token}` },
+        }
+      );
       setEvents((prev) => prev.filter((e) => e._id !== eventId));
       setAlert("Event deleted successfully!");
     } catch (err) {

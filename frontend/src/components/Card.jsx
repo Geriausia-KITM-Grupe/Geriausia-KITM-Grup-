@@ -11,7 +11,7 @@ const Card = ({ title, picture, time, location, description, _id }) => {
     const fetchFavoriteStatus = async () => {
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_BACKEND}event-likes/${_id}/liked`,
+          `${import.meta.env.VITE_BACKEND}api/event-likes/${_id}/liked`,
           {
             headers: { authorization: `Bearer ${user.token}` },
           }
@@ -34,7 +34,7 @@ const Card = ({ title, picture, time, location, description, _id }) => {
     if (!user.token) return;
     try {
       const { data } = await axios.post(
-        `${import.meta.env.VITE_BACKEND}event-likes/${_id}/like`,
+        `${import.meta.env.VITE_BACKEND}api/event-likes/${_id}/like`,
         {},
         { headers: { authorization: `Bearer ${user.token}` } }
       );
@@ -64,12 +64,18 @@ const Card = ({ title, picture, time, location, description, _id }) => {
       >
         <i className="fas fa-heart" ref={heartRef}></i>
       </button>
+
       <img
-        src={`http://localhost:3000${picture}`}
+        src={`${import.meta.env.VITE_BACKEND}${picture.slice(1)}`}
         alt={title || "Event"}
         className="event-list__card-img"
         style={{ width: "100%", height: "180px", objectFit: "cover" }}
+        onError={(e) => {
+          e.target.onerror = null; // Prevent infinite loop
+          e.target.src = `${import.meta.env.VITE_BACKEND}uploads/notfound.png`; // Path to your fallback image
+        }}
       />
+
       <div
         className="event-list__card-details"
         style={{ flex: 1, overflow: "hidden" }}

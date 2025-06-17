@@ -4,7 +4,7 @@ import axios from "axios";
 import UserRoute from "../../components/routes/UserRoute";
 import Alert from "../../components/Alert";
 
-const CATEGORY_URL = `${import.meta.env.VITE_BACKEND}event-categories`;
+const CATEGORY_URL = `${import.meta.env.VITE_BACKEND}api/event-categories`;
 
 const UpdateEvent = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const UpdateEvent = () => {
       .then((res) => setCategories(res.data))
       .catch(() => setCategories([]));
     axios
-      .get(`${import.meta.env.VITE_BACKEND}events/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND}api/events/${id}`)
       .then((res) => {
         const ev = res.data;
         setForm({
@@ -85,11 +85,15 @@ const UpdateEvent = () => {
     });
 
     try {
-      await axios.put(`${import.meta.env.VITE_BACKEND}events/${id}`, formData, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND}api/events/${id}`,
+        formData,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setAlert("Event updated successfully!");
       setTimeout(() => navigate("/user/panel"), 1200);
     } catch (error) {
