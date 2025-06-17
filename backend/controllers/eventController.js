@@ -90,12 +90,15 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
     totalEvents: total,
   });
 });
-// Get all events (admin)
+// Get all events (admin/user)
 const getAllEvents = asyncHandler(async (req, res) => {
   const events = await Event.find();
   res.json(events);
 });
-
+const getAllEventsUser = asyncHandler(async (req, res) => {
+  const events = await Event.find({ createdBy: req.user._id });
+  res.json(events);
+});
 // Approve event (admin)
 const approveEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
@@ -195,4 +198,5 @@ module.exports = {
   deleteEvent,
   getApprovedEventsPaginated,
   getEventById,
+  getAllEventsUser,
 };

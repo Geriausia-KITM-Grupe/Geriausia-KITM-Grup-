@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ConfirmModal from "../../components/ConfirmModal";
 import ShimmerLoader from "../../components/ShimmerLoader";
@@ -6,6 +7,7 @@ import ShimmerLoader from "../../components/ShimmerLoader";
 import AdminRoute from "../../components/routes/AdminRoute";
 
 const ManageEvents = () => {
+  const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
   const [eventToRemove, setEventToRemove] = useState(null);
   const [events, setEvents] = useState([]);
@@ -176,6 +178,15 @@ const ManageEvents = () => {
 
   return (
     <AdminRoute>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <button
+          className="admin-dashboard__btn"
+          id="go-back-btn"
+          onClick={() => navigate(-1)}
+        >
+          <i className="fas fa-arrow-left"></i> Go back
+        </button>
+      </div>
       <ConfirmModal
         isOpen={showConfirm}
         message="Are you sure you want to delete this?"
@@ -224,6 +235,7 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <input
                             type="text"
+                            className="add-event-form__input"
                             value={editEvent.title}
                             maxLength={50}
                             onChange={(e) =>
@@ -244,6 +256,7 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <input
                             type="datetime-local"
+                            className="add-event-form__input"
                             value={editEvent.time}
                             onChange={(e) =>
                               setEditEvent((prev) => ({
@@ -275,6 +288,7 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <textarea
                             value={editEvent.description}
+                            className="add-event-form__textarea"
                             maxLength={120}
                             onChange={(e) =>
                               setEditEvent((prev) => ({
@@ -294,6 +308,7 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <input
                             type="text"
+                            className="add-event-form__input"
                             value={editEvent.location}
                             maxLength={40}
                             onChange={(e) =>
