@@ -96,12 +96,14 @@ export const UserAccounts = () => {
       setUsers((prev) => prev.filter((u) => u._id !== userToDelete));
       setAlert("User deleted successfully!");
 
-      // If the deleted user is the currently logged-in user, log them out
-      if (user && user._id === userToDelete) {
+      // If the deleted user is the currently logged-in user, log them out and remove token
+      if (user && String(user._id) === String(userToDelete)) {
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
         navigate("/login");
       }
-    } catch {
+    } catch (err) {
+      console.error("Delete user error:", err);
       setAlert("Failed to delete user");
     }
     setShowConfirm(false);
