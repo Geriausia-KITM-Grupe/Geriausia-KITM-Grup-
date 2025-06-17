@@ -29,6 +29,18 @@ const Register = () => {
       setAlert("Please fill all the fields.");
       return;
     }
+        // Username validation: only letters, numbers, underscores, hyphens, spaces, 2-200 chars
+    const usernameRegex = /^[A-Za-z0-9_\-\s]{2,200}$/;
+    if (!usernameRegex.test(form.username)) {
+      setAlert(
+        "Username can only contain letters, numbers, spaces, underscores, and hyphens, and must be 2-200 characters long."
+      );
+      return;
+    }
+    if (form.username.length > 200) {
+      setAlert("Username must be at most 200 characters.");
+      return;
+    }
     if (!form.email.includes("@")) {
       setAlert("Please enter a valid email address.");
       return;
