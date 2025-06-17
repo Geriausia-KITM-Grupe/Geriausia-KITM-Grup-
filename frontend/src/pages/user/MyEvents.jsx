@@ -24,10 +24,13 @@ const MyEvents = () => {
   const fetchMyEvents = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const response = await axios.get("http://localhost:3000/api/events", {
-        headers: { authorization: `Bearer ${user.token}` },
-        params: { createdBy: user._id },
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND}events`,
+        {
+          headers: { authorization: `Bearer ${user.token}` },
+          params: { createdBy: user._id },
+        }
+      );
       setEvents(response.data);
     } catch (err) {
       setAlert("Failed to fetch events.");
@@ -79,7 +82,7 @@ const MyEvents = () => {
         time: editForm.time ? new Date(editForm.time).toISOString() : null,
       };
       const response = await axios.put(
-        `http://localhost:3000/api/events/${eventId}`,
+        `${import.meta.env.VITE_BACKEND}events/${eventId}`,
         updatedEvent,
         { headers: { authorization: `Bearer ${user.token}` } }
       );
@@ -106,7 +109,7 @@ const MyEvents = () => {
   const handleRemoveLike = async (eventId) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      await axios.delete(`http://localhost:3000/api/events/${eventId}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND}events/${eventId}`, {
         headers: { authorization: `Bearer ${user.token}` },
       });
       setEvents((prev) => prev.filter((e) => e._id !== eventId));
@@ -117,7 +120,7 @@ const MyEvents = () => {
       setDeletingId(null);
     }
   };
-
+  console.log(events);
   return (
     <UserRoute>
       <ConfirmModal
@@ -171,9 +174,14 @@ const MyEvents = () => {
                             className="add-event-form__input"
                             value={editForm.title}
                             onChange={handleEditChange}
+                            maxLength={50}
                           />
                         ) : (
-                          <Link to={`/events/${event._id}`}>{event.title}</Link>
+                          <Link to={`/events/${event._id}`}>
+                            {event.title.length > 50
+                              ? event.title.slice(0, 50) + "..."
+                              : event.title}
+                          </Link>
                         )}
                       </td>
                       <td>
@@ -210,7 +218,11 @@ const MyEvents = () => {
                             name="description"
                             value={editForm.description}
                             onChange={handleEditChange}
+                            maxLength={200}
                           />
+                        ) : event.description &&
+                          event.description.length > 200 ? (
+                          event.description.slice(0, 200) + "..."
                         ) : (
                           event.description
                         )}

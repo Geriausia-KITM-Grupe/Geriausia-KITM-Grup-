@@ -11,7 +11,7 @@ const Card = ({ title, picture, time, location, description, _id }) => {
     const fetchFavoriteStatus = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/api/event-likes/${_id}/liked`,
+          `${import.meta.env.VITE_BACKEND}event-likes/${_id}/liked`,
           {
             headers: { authorization: `Bearer ${user.token}` },
           }
@@ -34,7 +34,7 @@ const Card = ({ title, picture, time, location, description, _id }) => {
     if (!user.token) return;
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/api/event-likes/${_id}/like`,
+        `${import.meta.env.VITE_BACKEND}event-likes/${_id}/like`,
         {},
         { headers: { authorization: `Bearer ${user.token}` } }
       );
@@ -48,6 +48,12 @@ const Card = ({ title, picture, time, location, description, _id }) => {
       console.error("Failed to toggle favorite:", error);
     }
   };
+
+  // Limit description to 120 characters with ellipsis
+  const shortDescription =
+    description && description.length > 120
+      ? description.slice(0, 120) + "..."
+      : description || "";
 
   return (
     <div className="event-list__card">
@@ -81,7 +87,7 @@ const Card = ({ title, picture, time, location, description, _id }) => {
           className="event-list__card-description"
           style={{ overflow: "hidden", textOverflow: "ellipsis" }}
         >
-          {description || ""}
+          {shortDescription}
         </p>
         <a href={`/events/${_id}`} className="event-list__card-link">
           View Details

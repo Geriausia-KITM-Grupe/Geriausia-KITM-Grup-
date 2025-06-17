@@ -4,7 +4,7 @@ import axios from "axios";
 import UserRoute from "../../components/routes/UserRoute";
 import Alert from "../../components/Alert";
 
-const CATEGORY_URL = "http://localhost:3000/api/event-categories";
+const CATEGORY_URL = `${import.meta.env.VITE_BACKEND}event-categories`;
 
 const UpdateEvent = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const UpdateEvent = () => {
       .then((res) => setCategories(res.data))
       .catch(() => setCategories([]));
     axios
-      .get(`http://localhost:3000/api/events/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND}events/${id}`)
       .then((res) => {
         const ev = res.data;
         setForm({
@@ -85,7 +85,7 @@ const UpdateEvent = () => {
     });
 
     try {
-      await axios.put(`http://localhost:3000/api/events/${id}`, formData, {
+      await axios.put(`${import.meta.env.VITE_BACKEND}events/${id}`, formData, {
         headers: {
           authorization: `Bearer ${token}`,
         },
@@ -103,7 +103,10 @@ const UpdateEvent = () => {
   if (loading) {
     return (
       <div className="add-event-form">
-        <div className="shimmer-loader" style={{ width: 320, height: 40, marginBottom: 18 }} />
+        <div
+          className="shimmer-loader"
+          style={{ width: 320, height: 40, marginBottom: 18 }}
+        />
       </div>
     );
   }

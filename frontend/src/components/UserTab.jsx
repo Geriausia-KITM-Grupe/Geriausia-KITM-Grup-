@@ -114,7 +114,7 @@ const UserTab = () => {
                 className="fas fa-calendar-plus"
                 style={{ marginRight: "8px" }}
               ></i>
-              Pridėti renginį
+              Add Event
             </Link>
             <Link
               to="/user/my-events"
