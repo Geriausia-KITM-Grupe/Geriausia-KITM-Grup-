@@ -2,14 +2,18 @@ import { useNavigate } from "react-router-dom";
 import AdminRoute from "../../components/routes/AdminRoute";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Alert from "../../components/Alert";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export const UserAccounts = () => {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
-  const [showForm, setShowForm] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); // Track selected user
   const [role, setRole] = useState("");
+  const [alert, setAlert] = useState("");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
@@ -33,7 +37,7 @@ export const UserAccounts = () => {
       setRole(selectedUser.role);
     }
   }, [selectedUser]);
-
+  // Handle form submission to update user role
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedUser) return;
@@ -42,32 +46,74 @@ export const UserAccounts = () => {
       await axios.put(
         `http://localhost:3000/api/users/${selectedUser._id}`,
         { role },
-        { headers: { authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
       );
-      // Update users list locally
       setUsers((prev) =>
         prev.map((u) => (u._id === selectedUser._id ? { ...u, role } : u))
       );
-      setShowForm(false);
       setSelectedUser(null);
+      setAlert("User role updated successfully!");
     } catch {
-      // Optionally handle error
-      alert("Failed to update user role");
+      setAlert("Failed to update user role");
     }
   };
 
-  // delete user as admin
+  // cancel edit user
+  const handleEditCancel = () => {
+    setSelectedUser(null);
+    setRole("");
+  };
 
-  const handleDelete = async (userId) => {
+  // delete user as admin
+  const handleDelete = (userId) => {
+    setUserToDelete(userId);
+    setShowConfirm(true);
+  };
+
+  const confirmDelete = async () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axios.delete(`http://localhost:3000/api/admin/user/${userId}`, {
-        headers: { authorization: `Bearer ${token}` },
-      });
-      setUsers((prev) => prev.filter((u) => u._id !== userId));
+      await axios.delete(
+        `http://localhost:3000/api/admin/user/${userToDelete}`,
+        {
+          headers: { authorization: `Bearer ${token}` },
+        }
+      );
+      setUsers((prev) => prev.filter((u) => u._id !== userToDelete));
+      setAlert("User deleted successfully!");
     } catch {
-      alert("Failed to delete user");
+      setAlert("Failed to delete user");
+    }
+    setShowConfirm(false);
+    setUserToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowConfirm(false);
+    setUserToDelete(null);
+  };
+
+  // Ban or disable user
+  const handleBan = async (userId, currentStatus) => {
+    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    try {
+      await axios.put(
+        `http://localhost:3000/api/users/${userId}`,
+        { status: !currentStatus },
+        { headers: { authorization: `Bearer ${token}` } }
+      );
+      setUsers((prev) =>
+        prev.map((u) =>
+          u._id === userId ? { ...u, status: !currentStatus } : u
+        )
+      );
+      setAlert(!currentStatus ? "User enabled successfully!" : "User banned!");
+    } catch {
+      setAlert("Failed to update user status");
     }
   };
 
@@ -84,33 +130,13 @@ export const UserAccounts = () => {
         </button>
 
         <div style={{ overflowX: "auto", marginTop: "24px" }}>
-          {showForm && selectedUser && (
-            <div className="admin-users__form">
-              <h2
-                className="admin-users__form-title"
-                style={{ marginBottom: "12px", fontWeight: "bold" }}
-              >
-                Editing User: {selectedUser.userName}
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="admin-users__form-group">
-                  <label htmlFor="role">Role</label>
-                  <select
-                    id="role"
-                    required
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </div>
-                <button type="submit" className="admin-users__submit-btn">
-                  Submit
-                </button>
-              </form>
-            </div>
-          )}
+          <Alert message={alert} onClose={() => setAlert("")} />
+          <ConfirmModal
+            isOpen={showConfirm}
+            message="Are you sure you want to delete this user?"
+            onConfirm={confirmDelete}
+            onCancel={cancelDelete}
+          />
           <table
             className="admin-users__table"
             style={{ minWidth: "360px", width: "100%" }}
@@ -121,6 +147,7 @@ export const UserAccounts = () => {
                 <th>User</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Last login</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -128,50 +155,155 @@ export const UserAccounts = () => {
               {users.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     style={{ textAlign: "center", color: "#888" }}
                   >
                     List is empty
                   </td>
                 </tr>
               ) : (
-                users.map((usr, idx) => (
-                  <tr key={usr._id}>
-                    <td>
-                      <b>{idx + 1}.</b>
-                    </td>
-                    <td>{usr.userName}</td>
-                    <td
-                      style={{
-                        wordBreak: "break-word",
-                        color: "#888",
-                        width: "370px",
-                      }}
-                    >
-                      <span>{usr.email}</span>
-                    </td>
-                    <td style={{ textTransform: "capitalize" }}>{usr.role}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          setSelectedUser(usr);
-                          setShowForm(true);
+                users.map((usr, idx) =>
+                  selectedUser && selectedUser._id === usr._id ? (
+                    <tr key={usr._id}>
+                      <td>
+                        <b>{idx + 1}.</b>
+                      </td>
+                      <td colSpan={5} style={{ padding: 0 }}>
+                        <div
+                          className="admin-category-form__input"
+                          style={{
+                            margin: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                          }}
+                        >
+                          <span>Editing: {usr.userName}</span>
+                          <span
+                            style={{
+                              wordBreak: "break-word",
+                              color: "rgb(136, 136, 136)",
+                              width: "150px",
+                              marginLeft: "50px",
+                            }}
+                          >
+                            Role:
+                          </span>
+                          <form
+                            onSubmit={handleSubmit}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 12,
+                            }}
+                          >
+                            <select
+                              id="role"
+                              required
+                              value={role}
+                              onChange={(e) => setRole(e.target.value)}
+                              className="admin-category-form__input"
+                              style={{ minWidth: 100 }}
+                            >
+                              <option value="" disabled>
+                                Select role
+                              </option>
+                              <option value="user">User</option>
+                              <option value="admin">Admin</option>
+                            </select>
+
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: 8,
+                                fontWeight: 500,
+                                marginLeft: "60px",
+                              }}
+                            >
+                              <button
+                                type="submit"
+                                className="admin-category-form__btn"
+                                style={{
+                                  minWidth: 80,
+                                  padding: "6px 18px",
+                                }}
+                                disabled={!role}
+                              >
+                                Save
+                              </button>
+                              <button
+                                type="button"
+                                className="admin-category-form__btn"
+                                style={{
+                                  minWidth: 80,
+                                  padding: "6px 18px",
+                                  background: "#f44336",
+                                }}
+                                onClick={handleEditCancel}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr key={usr._id}>
+                      <td>
+                        <b>{idx + 1}.</b>
+                      </td>
+                      <td>{usr.userName}</td>
+                      <td
+                        style={{
+                          wordBreak: "break-word",
+                          color: "#888",
+                          width: "370px",
                         }}
-                        className="admin-users__edit-btn"
-                        title="Edit"
                       >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <button
-                        className="admin-users__delete-btn"
-                        title="Delete"
-                        onClick={() => handleDelete(usr._id)}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                        <span>{usr.email}</span>
+                      </td>
+                      <td style={{ textTransform: "capitalize" }}>
+                        {usr.role}
+                      </td>
+                      <td>
+                        {usr.lastLogin
+                          ? new Date(usr.lastLogin).toLocaleString()
+                          : "N/A"}
+                      </td>
+                      <td>
+                        <button
+                          className={
+                            usr.status
+                              ? "admin-users__delete-btn"
+                              : "admin-users__edit-btn"
+                          }
+                          style={{ marginRight: 8 }}
+                          onClick={() => handleBan(usr._id, usr.status)}
+                          type="button"
+                        >
+                          {usr.status ? "Ban" : "Enable"}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedUser(usr);
+                          }}
+                          className="admin-users__edit-btn"
+                          title="Edit"
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button
+                          className="admin-users__delete-btn"
+                          title="Delete"
+                          onClick={() => handleDelete(usr._id)}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                )
               )}
             </tbody>
           </table>
