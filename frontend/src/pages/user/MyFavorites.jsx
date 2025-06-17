@@ -4,6 +4,7 @@ import UserRoute from "../../components/routes/UserRoute";
 import ShimmerLoader from "../../components/ShimmerLoader";
 
 import ConfirmModal from "../../components/ConfirmModal";
+import { Link } from "react-router-dom";
 
 const user = JSON.parse(localStorage.getItem("user")); // user data
 
@@ -113,7 +114,9 @@ const MyFavorites = () => {
                       <td>
                         <b>{idx + 1}.</b>
                       </td>
-                      <td>{event.title}</td>
+                      <td>
+                        <Link to={`/events/${event._id}`}>{event.title}</Link>
+                      </td>
                       <td>
                         {event.time
                           ? new Date(event.time).toLocaleDateString("en-US", {
