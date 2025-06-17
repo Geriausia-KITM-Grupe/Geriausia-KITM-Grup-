@@ -11,9 +11,9 @@ const Nav = () => {
           Events
         </Link>
 
-        <a href="#" className="header__nav-link">
+        <Link to="/contacts" className="header__nav-link">
           Contact
-        </a>
+        </Link>
       </nav>
     </>
   );

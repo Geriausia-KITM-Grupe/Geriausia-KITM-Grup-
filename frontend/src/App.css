@@ -2078,3 +2078,55 @@ a {
     text-align: center;
   }
 }
+
+
+.contact {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.contact__title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #3dff7e;
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.contact__card {
+  background: #232733;
+  color: #111;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.contact__card:hover {
+  transform: translateY(-5px);
+}
+
+.contact__icon {
+  font-size: 2rem;
+  color: #3dff7e;
+  margin-bottom: 0.5rem;
+}
+
+.contact__card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color:white;
+}
+
+.contact__card p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+  color:white;
+}
