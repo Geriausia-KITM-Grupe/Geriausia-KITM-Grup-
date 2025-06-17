@@ -59,6 +59,9 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
 
   // Filtering
   const filter = { approved: true };
+  if (req.query.search) {
+    filter.title = { $regex: "^" + req.query.search, $options: "i" };
+  }
   if (req.query.category) {
     const categoryDoc = await EventCategory.findOne({
       name: req.query.category.toLowerCase(),
@@ -83,6 +86,17 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
     Event.find(filter).sort(sort).skip(skip).limit(limit),
     Event.countDocuments(filter),
   ]);
+
+  // Search check:
+
+  if (events.length === 0) {
+    return res.status(404).json({
+      message: "Invalid event",
+      events: [],
+      totalPages: 0,
+      totalEvents: 0,
+    });
+  }
 
   res.json({
     events,
