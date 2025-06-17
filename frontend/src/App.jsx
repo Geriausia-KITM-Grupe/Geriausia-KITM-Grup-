@@ -10,6 +10,7 @@ import EventDetails from "./pages/EventDetails";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import Contacts from "./pages/Contacts"
 
 ///Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
@@ -37,6 +38,7 @@ function App() {
         <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/contacts" element={<Contacts />} />
 
         {/*user routes*/}
         <Route path="/user/add-event" element={<AddEvent />} />
