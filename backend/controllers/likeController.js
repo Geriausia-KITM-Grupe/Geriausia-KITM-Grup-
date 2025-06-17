@@ -38,6 +38,48 @@ const toggleLike = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * Remove like for an event by the current user.
+ * Responds with a success message or error if not found.
+ */
+const removeLike = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const eventId = req.params.id;
+
+  const like = await Like.findOne({ user: userId, event: eventId });
+  if (!like) {
+    res.status(404);
+    throw new Error("Like not found");
+  }
+
+  // Ensure only the owner can remove their like
+  if (like.user.toString() !== userId.toString()) {
+    res.status(403);
+    throw new Error("Not authorized to remove this like");
+  }
+
+  await like.deleteOne();
+  res.json({ message: "Like removed successfully" });
+});
+
+/**
+ * Get all event IDs liked by the current user.
+ * Responds with an array of event IDs.
+ */
+const getUserLiked = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  // Find likes and populate event data
+  const likes = await Like.find({ user: userId }).populate({
+    path: "event",
+    select: "-__v", // exclude __v, include all other event fields
+  });
+  // Extract populated event objects
+  const likedEvents = likes
+    .filter((like) => like.event) // filter out deleted events
+    .map((like) => like.event);
+  res.json(likedEvents);
+});
+
 // Get like count and if current user liked
 const getEventLikes = asyncHandler(async (req, res) => {
   const eventId = req.params.id;
@@ -50,4 +92,10 @@ const getEventLikes = asyncHandler(async (req, res) => {
   res.json({ likeCount, liked });
 });
 
-module.exports = { toggleLike, getEventLikes, getLikeStatus };
+module.exports = {
+  toggleLike,
+  getEventLikes,
+  getLikeStatus,
+  getUserLiked,
+  removeLike,
+};

@@ -3,6 +3,7 @@ import AdminRoute from "../../components/routes/AdminRoute";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import Alert from "../../components/Alert";
+import ShimmerLoader from "../../components/ShimmerLoader";
 
 const API_URL = "http://localhost:3000/api/event-categories";
 
@@ -143,34 +144,6 @@ const ManageEventCategories = () => {
     setEditingId(null);
     setEditForm({ name: "", description: "" });
   };
-
-  // Simple shimmer loader component
-  const ShimmerLoader = () => (
-    <tbody>
-      {[...Array(3)].map((_, idx) => (
-        <tr key={idx}>
-          <td>
-            <div className="shimmer-loader" style={{ width: 24, height: 16 }} />
-          </td>
-          <td>
-            <div
-              className="shimmer-loader"
-              style={{ width: 100, height: 16 }}
-            />
-          </td>
-          <td>
-            <div
-              className="shimmer-loader"
-              style={{ width: 220, height: 16 }}
-            />
-          </td>
-          <td>
-            <div className="shimmer-loader" style={{ width: 60, height: 16 }} />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  );
 
   return (
     <AdminRoute>

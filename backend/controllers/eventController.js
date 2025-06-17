@@ -1,6 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const Event = require("../models/Event");
 const EventCategory = require("../models/EventCategory");
+
+const fs = require("fs");
+const path = require("path");
+
 // Create event (user)
 const createEvent = asyncHandler(async (req, res) => {
   const { title, description, category, location, time } = req.body;
@@ -136,7 +140,6 @@ const updateEvent = asyncHandler(async (req, res) => {
   res.json({ message: "Event updated", event });
 });
 
-// Delete event (admin or creator)
 const deleteEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
   if (!event) {
@@ -151,8 +154,23 @@ const deleteEvent = asyncHandler(async (req, res) => {
     res.status(403);
     throw new Error("Not authorized to delete this event");
   }
+
+  // Delete photo file if exists
+  if (event.photo) {
+    // Remove leading slash if present
+    const photoRelativePath = event.photo.startsWith("/")
+      ? event.photo.slice(1)
+      : event.photo;
+    const photoPath = path.join(__dirname, "..", photoRelativePath);
+    fs.unlink(photoPath, (err) => {
+      if (err) {
+        console.error("Failed to delete photo:", err);
+      }
+    });
+  }
+
   await event.deleteOne();
-  res.json({ message: "Event deleted" });
+  res.json({ message: "Event and photo deleted" });
 });
 
 module.exports = {
