@@ -5,7 +5,7 @@
 /// <ShimmerLoader mode="card" cards={6}
 /// mode means wich one type using [card or list], rows is lines down
 //  - columns is counting to right
-/// cards means number of iteam in page [ use only for card mode]
+/// cards means number of iteam in page [ use only for card mode].
 
 const ShimmerLoader = ({ rows = 3, columns = 4, mode = "list", cards = 3 }) => {
   if (mode === "list") {
