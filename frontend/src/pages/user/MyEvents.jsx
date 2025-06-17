@@ -20,15 +20,13 @@ const MyEvents = () => {
     description: "",
     time: "",
   });
-
   const fetchMyEvents = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND}api/events`,
+        `${import.meta.env.VITE_BACKEND}api/events/users`,
         {
           headers: { authorization: `Bearer ${user.token}` },
-          params: { createdBy: user._id },
         }
       );
       setEvents(response.data);

@@ -11,6 +11,7 @@ const {
   deleteEvent,
   getEventById,
   getApprovedEventsPaginated,
+  getAllEventsUser,
 } = require("../controllers/eventController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
@@ -45,6 +46,8 @@ router.post("/", protect, upload.single("picture"), createEvent);
 
 // User or admin: update event (with picture)
 router.put("/:id", protect, upload.single("picture"), updateEvent);
+
+router.get("/users", protect, getAllEventsUser);
 
 // Admin: get all events (supports pagination: ?page=1&limit=10)
 router.get("/", protect, adminOnly, getAllEvents);
