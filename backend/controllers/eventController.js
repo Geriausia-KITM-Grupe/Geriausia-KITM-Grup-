@@ -173,6 +173,17 @@ const deleteEvent = asyncHandler(async (req, res) => {
   res.json({ message: "Event and photo deleted" });
 });
 
+/**
+ * Get a single approved event by ID (public)
+ */
+const getEventById = asyncHandler(async (req, res) => {
+  const event = await Event.findOne({ _id: req.params.id, approved: true }).populate("category", "name");
+  if (!event) {
+    return res.status(404).json({ message: "Event not found" });
+  }
+  res.json(event);
+});
+
 module.exports = {
   createEvent,
   getApprovedEvents,
@@ -181,4 +192,5 @@ module.exports = {
   updateEvent,
   deleteEvent,
   getApprovedEventsPaginated,
+  getEventById,
 };

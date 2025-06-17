@@ -1,5 +1,5 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 const EventDetails = () => {
@@ -7,8 +7,15 @@ const EventDetails = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [likeCount, setLikeCount] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
   const navigate = useNavigate();
+  const heartRef = useRef(null);
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Fetch event details
   useEffect(() => {
     setLoading(true);
     axios
@@ -17,6 +24,61 @@ const EventDetails = () => {
       .catch(() => setError("Event not found."))
       .finally(() => setLoading(false));
   }, [id]);
+
+  // Fetch like count and status
+  useEffect(() => {
+    if (!id) return;
+    const fetchLikes = async () => {
+      try {
+        const headers = user.token
+          ? { authorization: `Bearer ${user.token}` }
+          : {};
+        const { data } = await axios.get(
+          `http://localhost:3000/api/event-likes/${id}/likes`,
+          { headers }
+        );
+        setLikeCount(data.likeCount);
+        setLiked(data.liked);
+      } catch {
+        setLikeCount(0);
+        setLiked(false);
+      }
+    };
+    fetchLikes();
+  }, [id, user.token]);
+
+  // Animate heart color
+  useEffect(() => {
+    if (heartRef.current) {
+      heartRef.current.style.color = liked ? "#e74c3c" : "#fff";
+    }
+  }, [liked]);
+
+  const handleLike = async () => {
+    if (!user.token) {
+      alert("You must be logged in to like events.");
+      return;
+    }
+    setLikeLoading(true);
+    try {
+      const { data } = await axios.post(
+        `http://localhost:3000/api/event-likes/${id}/like`,
+        {},
+        { headers: { authorization: `Bearer ${user.token}` } }
+      );
+      setLiked(data.liked);
+      setLikeCount((prev) => (data.liked ? prev + 1 : prev - 1));
+      if (heartRef.current) {
+        heartRef.current.classList.remove("pop");
+        void heartRef.current.offsetWidth;
+        heartRef.current.classList.add("pop");
+      }
+    } catch {
+      alert("Failed to update like status.");
+    } finally {
+      setLikeLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -53,7 +115,35 @@ const EventDetails = () => {
         />
       </div>
       <div className="event-details__content">
-        <h1 className="event-details__title">{event.title}</h1>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <h1 className="event-details__title">{event.title}</h1>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              className="event-details__like-num"
+              style={{ marginRight: "0.5rem", fontSize: "1.2rem", color: "#fff" }}
+            >
+              {likeCount}
+            </span>
+            <button
+              className="event-details__heart-btn"
+              aria-label="Add to favorites"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: user.token ? "pointer" : "not-allowed",
+                fontSize: "1.8rem",
+                color: "#fff",
+                marginLeft: 0,
+                outline: "none",
+              }}
+              onClick={handleLike}
+              disabled={likeLoading || !user.token}
+              title={user.token ? (liked ? "Remove like" : "Like this event") : "Login to like"}
+            >
+              <i className="fas fa-heart" ref={heartRef}></i>
+            </button>
+          </div>
+        </div>
         <div className="event-details__meta">
           <span>
             <i className="fas fa-calendar-alt event-details__icon"></i>
@@ -83,13 +173,6 @@ const EventDetails = () => {
             Status: {event.status}
           </li>
         </ul>
-        <a
-          href="#"
-          className="event-details__cta-btn"
-          style={{ marginRight: 16 }}
-        >
-          Favorite
-        </a>
         <button
           className="event-details__cta-btn"
           onClick={() => navigate(-1)}

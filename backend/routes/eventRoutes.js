@@ -9,6 +9,7 @@ const {
   approveEvent,
   updateEvent,
   deleteEvent,
+  getEventById,
   getApprovedEventsPaginated,
 } = require("../controllers/eventController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
@@ -50,6 +51,15 @@ router.get("/", protect, adminOnly, getAllEvents);
 
 // Admin: approve event
 router.patch("/:id/approve", protect, adminOnly, approveEvent);
+
+// Admin or creator: delete event
+router.delete("/:id", protect, deleteEvent);
+
+/**
+ * Public: get a single approved event by ID
+ * This must be after all other /:id routes to avoid conflicts!
+ */
+router.get("/:id", getEventById);
 
 // Admin or creator: delete event
 router.delete("/:id", protect, deleteEvent);
