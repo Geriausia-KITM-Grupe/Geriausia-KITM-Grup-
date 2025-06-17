@@ -23,7 +23,7 @@ export const UserAccounts = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const { data } = await axios.get("http://localhost:3000/api/users", {
+        const { data } = await axios.get(`${import.meta.env.BACKEND}users`, {
           headers: { authorization: `Bearer ${token}` },
         });
 
@@ -50,7 +50,7 @@ export const UserAccounts = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       await axios.put(
-        `http://localhost:3000/api/users/${selectedUser._id}`,
+        `${import.meta.env.BACKEND}users/${selectedUser._id}`,
         { role },
         {
           headers: {
@@ -84,7 +84,7 @@ export const UserAccounts = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       await axios.delete(
-        `http://localhost:3000/api/admin/user/${userToDelete}`,
+        `${import.meta.env.VITE_BACKEND}admin/user/${userToDelete}`,
         {
           headers: { authorization: `Bearer ${token}` },
         }
@@ -108,7 +108,7 @@ export const UserAccounts = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       await axios.put(
-        `http://localhost:3000/api/users/${userId}`,
+        `${import.meta.env.BACKEND}users/${userId}`,
         { status: !currentStatus },
         { headers: { authorization: `Bearer ${token}` } }
       );
