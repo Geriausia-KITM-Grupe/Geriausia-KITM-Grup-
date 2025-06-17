@@ -59,6 +59,9 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
 
   // Filtering
   const filter = { approved: true };
+  if (req.query.search) {
+    filter.title = { $regex: "^" + req.query.search, $options: "i" };
+  }
   if (req.query.category) {
     const categoryDoc = await EventCategory.findOne({
       name: req.query.category.toLowerCase(),
@@ -84,6 +87,17 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
     Event.countDocuments(filter),
   ]);
 
+  // Search check:
+
+  if (events.length === 0) {
+    return res.status(404).json({
+      message: "Invalid event",
+      events: [],
+      totalPages: 0,
+      totalEvents: 0,
+    });
+  }
+
   res.json({
     events,
     totalPages: Math.ceil(total / limit),
@@ -92,7 +106,7 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
 });
 // Get all events (admin/user)
 const getAllEvents = asyncHandler(async (req, res) => {
-  const events = await Event.find();
+  const events = await Event.find().populate("category", "name");
   res.json(events);
 });
 const getAllEventsUser = asyncHandler(async (req, res) => {
@@ -111,13 +125,17 @@ const approveEvent = asyncHandler(async (req, res) => {
   res.json({ message: "Event approved", event });
 });
 
-// Update event (user or admin)
+/**
+ * Update event (user or admin)
+ * Allows admin to set approved status, and populates category on response
+ */
 const updateEvent = asyncHandler(async (req, res) => {
-  const { title, description, category, location, time } = req.body;
+  const { title, description, category, location, time, approved } = req.body;
   let picture = null;
   if (req.file) {
     picture = `/uploads/${req.file.filename}`;
   }
+
   const event = await Event.findById(req.params.id);
   if (!event) {
     res.status(404);
@@ -137,9 +155,28 @@ const updateEvent = asyncHandler(async (req, res) => {
   if (location) event.location = location;
   if (time) event.time = time;
   if (picture) event.picture = picture;
+  // Allow admin to set approved status (accept boolean or string)
+  if (req.user.role === "admin" && typeof approved !== "undefined") {
+    // Accept boolean, "approved", "pending", "true", "false"
+    if (typeof approved === "boolean") {
+      event.approved = approved;
+    } else if (typeof approved === "string") {
+      if (approved === "approved" || approved === "true") {
+        event.approved = true;
+      } else if (approved === "pending" || approved === "false") {
+        event.approved = false;
+      }
+    } else {
+      // fallback: treat anything else as false
+      event.approved = false;
+    }
+  }
+
   // If user updates, event must be re-approved
   if (req.user.role !== "admin") event.approved = false;
   await event.save();
+  // Populate category with name for response
+  await event.populate("category", "name");
   res.json({ message: "Event updated", event });
 });
 

@@ -3,8 +3,15 @@ import axios from "axios";
 import Card from "../components/Card";
 import Pagination from "../components/Pagination";
 import ShimmerLoader from "../components/ShimmerLoader";
+import { useLocation } from "react-router-dom";
 
 const EventList = () => {
+  // Search:
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const initialSearch = params.get("search") || "";
+
   const [events, setEvents] = useState([]);
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
@@ -13,9 +20,12 @@ const EventList = () => {
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState("date-asc");
   const [cats, setCategories] = useState([]);
+  const [search, setSearch] = useState(initialSearch);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setLoading(true);
+    setError(""); // for search
     axios
       .get(`${import.meta.env.VITE_BACKEND}api/events/approved/paginated`, {
         params: {
@@ -23,6 +33,7 @@ const EventList = () => {
           limit: itemsPerPage,
           category: filter === "all" ? undefined : filter, // <-- fix here
           sort,
+          search,
         },
       })
       .then((res) => {
@@ -30,8 +41,16 @@ const EventList = () => {
         setPageCount(res.data.totalPages);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  }, [page, itemsPerPage, filter, sort]);
+      .catch((err) => {
+        setLoading(false);
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+          setEvents([]); // išvalyk sąrašą
+        } else {
+          setError("Invalid event");
+        }
+      });
+  }, [page, itemsPerPage, filter, sort, search]);
 
   useEffect(() => {
     axios
@@ -39,6 +58,13 @@ const EventList = () => {
       .then((res) => setCategories(res.data))
       .catch(() => setCategories([]));
   }, []);
+
+  // Search from beginning - first page.....
+
+  useEffect(() => {
+    setSearch(initialSearch);
+    setPage(1);
+  }, [initialSearch]);
 
   const handlePrev = () => setPage((prev) => Math.max(prev - 1, 1));
   const handleNext = () => setPage((prev) => Math.min(prev + 1, pageCount));
@@ -58,6 +84,12 @@ const EventList = () => {
   return (
     <section className="event-list">
       <h2 className="event-list__title">Upcoming Events</h2>
+
+      {error && (
+        <div style={{ color: "red", textAlign: "center", margin: "16px 0" }}>
+          {error}
+        </div>
+      )}
 
       <div className="event-list__filter-sort">
         <div className="event-list__sort">

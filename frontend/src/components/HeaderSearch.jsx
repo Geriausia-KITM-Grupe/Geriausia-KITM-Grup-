@@ -1,13 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HeaderSearch = () => {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle search logic here, e.g., call a search function or update state
     // TODO finish When Events are Ready...
-    console.log("Searching for:", query);
+    if (query.trim()) {
+      navigate(`/events?search=${encodeURIComponent(query)}`);
+      console.log("Searching for:", query);
+    }
   };
 
   return (
