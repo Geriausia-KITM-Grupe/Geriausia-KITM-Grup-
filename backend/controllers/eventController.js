@@ -156,15 +156,15 @@ const deleteEvent = asyncHandler(async (req, res) => {
   }
 
   // Delete photo file if exists
-  if (event.photo) {
-    // Remove leading slash if present
-    const photoRelativePath = event.photo.startsWith("/")
-      ? event.photo.slice(1)
-      : event.photo;
-    const photoPath = path.join(__dirname, "..", photoRelativePath);
-    fs.unlink(photoPath, (err) => {
+  if (event.picture) {
+    // Remove leading slash if present from /uploads
+    const pictureRelativePath = event.picture.startsWith("/")
+      ? event.picture.slice(1)
+      : event.picture;
+    const picturePath = path.join(__dirname, "..", pictureRelativePath);
+    fs.unlink(picturePath, (err) => {
       if (err) {
-        console.error("Failed to delete photo:", err);
+        console.error("Failed to delete picture:", err);
       }
     });
   }

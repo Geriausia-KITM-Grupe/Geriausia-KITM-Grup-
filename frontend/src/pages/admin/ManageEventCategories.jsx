@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import AdminRoute from "../../components/routes/AdminRoute";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+import AdminRoute from "../../components/routes/AdminRoute";
 import Alert from "../../components/Alert";
 import ShimmerLoader from "../../components/ShimmerLoader";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const API_URL = "http://localhost:3000/api/event-categories";
 
@@ -19,6 +20,8 @@ const ManageEventCategories = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [editingId, setEditingId] = useState(null); // NEW
   const [editForm, setEditForm] = useState({ name: "", description: "" }); // NEW
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [eventToRemove, setEventToRemove] = useState(null);
 
   const token = JSON.parse(localStorage.getItem("user"))?.token;
 
@@ -145,8 +148,31 @@ const ManageEventCategories = () => {
     setEditForm({ name: "", description: "" });
   };
 
+  // Handler to open confirm modal
+  // (Removed unused handleShowConfirm)
+
+  // Handler for confirming deletion
+  const confirmDelete = async () => {
+    if (eventToRemove) {
+      await handleDelete(eventToRemove);
+      setEventToRemove(null);
+      setShowConfirm(false);
+    }
+  };
+
+  // Handler for canceling deletion
+  const cancelDelete = () => {
+    setEventToRemove(null);
+    setShowConfirm(false);
+  };
   return (
     <AdminRoute>
+      <ConfirmModal
+        isOpen={showConfirm}
+        message="Are you sure you want to delete this?"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      />
       <section className="admin-events">
         <h1 className="admin-dashboard__title">Manage Events Categories</h1>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -289,7 +315,11 @@ const ManageEventCategories = () => {
                             <button
                               className="admin-users__delete-btn"
                               title="Delete"
-                              onClick={() => handleDelete(cat._id)}
+                              type="button"
+                              onClick={() => {
+                                setEventToRemove(cat._id);
+                                setShowConfirm(true);
+                              }}
                               disabled={deletingId === cat._id}
                             >
                               {deletingId === cat._id ? (

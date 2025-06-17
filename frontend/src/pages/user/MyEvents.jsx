@@ -3,41 +3,48 @@ import axios from "axios";
 import UserRoute from "../../components/routes/UserRoute";
 import ShimmerLoader from "../../components/ShimmerLoader";
 import ConfirmModal from "../../components/ConfirmModal";
+import Alert from "../../components/Alert";
+import { Link } from "react-router-dom";
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
-  const [editingId, setEditingId] = useState(null); // NEW
   const [showConfirm, setShowConfirm] = useState(false);
   const [eventToRemove, setEventToRemove] = useState(null);
 
-  useEffect(() => {
-    const fetchMyEvents = async () => {
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const response = await axios.get("http://localhost:3000/api/events", {
-          headers: { authorization: `Bearer ${user.token}` },
-          params: { createdBy: user._id },
-        });
-        setEvents(response.data);
-      } catch (err) {
-        setError("Failed to fetch events.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const [alert, setAlert] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    time: "",
+  });
 
+  const fetchMyEvents = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const response = await axios.get("http://localhost:3000/api/events", {
+        headers: { authorization: `Bearer ${user.token}` },
+        params: { createdBy: user._id },
+      });
+      setEvents(response.data);
+    } catch (err) {
+      setAlert("Failed to fetch events.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMyEvents();
   }, []);
 
-  // Handler to open confirm modal
   const handleShowConfirm = (eventId) => {
     setEventToRemove(eventId);
     setShowConfirm(true);
   };
 
-  // Handler for confirming deletion
   const confirmDelete = async () => {
     if (eventToRemove) {
       await handleRemoveLike(eventToRemove);
@@ -46,26 +53,56 @@ const MyEvents = () => {
     }
   };
 
-  // Handler for canceling deletion
   const cancelDelete = () => {
     setEventToRemove(null);
     setShowConfirm(false);
   };
 
-  // Handler for edit button (implement your own logic here)
   const handleEditClick = (event) => {
     setEditingId(event._id);
-    // Add your edit logic here (e.g., open a modal or navigate to edit page)
-    alert(`Edit event: ${event.title}`);
+    setEditForm({
+      title: event.title,
+      description: event.description,
+      time: event.time ? new Date(event.time).toISOString().slice(0, 16) : "",
+    });
   };
 
-  // Handler for delete button
+  const handleEditChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleEditSave = async (eventId) => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const updatedEvent = {
+        ...editForm,
+        time: editForm.time ? new Date(editForm.time).toISOString() : null,
+      };
+      const response = await axios.put(
+        `http://localhost:3000/api/events/${eventId}`,
+        updatedEvent,
+        { headers: { authorization: `Bearer ${user.token}` } }
+      );
+      setEvents((prev) =>
+        prev.map((e) => (e._id === eventId ? response.data : e))
+      );
+      setAlert("Event updated successfully!");
+      setEditingId(null);
+      fetchMyEvents();
+    } catch (err) {
+      setAlert("Failed to update event.");
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingId(null);
+  };
+
   const handleDelete = (eventId) => {
     setDeletingId(eventId);
     handleShowConfirm(eventId);
   };
 
-  // Handler for removing an event (delete request)
   const handleRemoveLike = async (eventId) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -73,8 +110,9 @@ const MyEvents = () => {
         headers: { authorization: `Bearer ${user.token}` },
       });
       setEvents((prev) => prev.filter((e) => e._id !== eventId));
+      setAlert("Event deleted successfully!");
     } catch (err) {
-      alert("Failed to delete event.");
+      setAlert("Failed to delete event.");
     } finally {
       setDeletingId(null);
     }
@@ -91,6 +129,7 @@ const MyEvents = () => {
       <div>
         <h2 className="admin-dashboard__title">My Events</h2>
         <div style={{ overflowX: "auto", marginTop: "24px" }}>
+          <Alert message={alert} onClose={() => setAlert("")} />
           <table
             className="admin-users__table"
             style={{ minWidth: "360px", width: "100%" }}
@@ -112,7 +151,7 @@ const MyEvents = () => {
                 {events.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={6}
                       style={{ textAlign: "center", color: "#888" }}
                     >
                       No events found.
@@ -124,17 +163,39 @@ const MyEvents = () => {
                       <td>
                         <b>{idx + 1}.</b>
                       </td>
-                      <td>{event.title}</td>
                       <td>
-                        {event.time
-                          ? new Date(event.time).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                          : ""}
+                        {editingId === event._id ? (
+                          <input
+                            type="text"
+                            name="title"
+                            className="add-event-form__input"
+                            value={editForm.title}
+                            onChange={handleEditChange}
+                          />
+                        ) : (
+                          <Link to={`/events/${event._id}`}>{event.title}</Link>
+                        )}
+                      </td>
+                      <td>
+                        {editingId === event._id ? (
+                          <input
+                            type="datetime-local"
+                            name="time"
+                            className="add-event-form__input"
+                            value={editForm.time}
+                            onChange={handleEditChange}
+                          />
+                        ) : event.time ? (
+                          new Date(event.time).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        ) : (
+                          ""
+                        )}
                       </td>
                       <td
                         style={{
@@ -143,9 +204,17 @@ const MyEvents = () => {
                           width: "370px",
                         }}
                       >
-                        {event.description}
+                        {editingId === event._id ? (
+                          <textarea
+                            className="add-event-form__input"
+                            name="description"
+                            value={editForm.description}
+                            onChange={handleEditChange}
+                          />
+                        ) : (
+                          event.description
+                        )}
                       </td>
-
                       <td>
                         {event.approved === true ? (
                           <span
@@ -161,8 +230,8 @@ const MyEvents = () => {
                         ) : event.approved === false ? (
                           <span
                             style={{
-                              color: "#00529B;",
-                              backgroundColor: "#BDE5F8",
+                              color: "#00529B",
+                              backgroundColor: "#3e6475",
                               borderRadius: "5px",
                               padding: "2px 2px 5px 2px",
                             }}
@@ -183,25 +252,42 @@ const MyEvents = () => {
                         )}
                       </td>
                       <td>
-                        <button
-                          className="admin-users__edit-btn"
-                          title="Edit"
-                          onClick={() => handleEditClick(event)}
-                        >
-                          <i className="fas fa-edit"></i>
-                        </button>
-                        <button
-                          className="admin-users__delete-btn"
-                          title="Delete"
-                          onClick={() => handleDelete(event._id)}
-                          disabled={deletingId === event._id}
-                        >
-                          {deletingId === event._id ? (
-                            <span className="spopup-loader__spinner"></span>
-                          ) : (
-                            <i className="fas fa-trash"></i>
-                          )}
-                        </button>
+                        {editingId === event._id ? (
+                          <>
+                            <button
+                              className="admin-users__edit-btn"
+                              title="Save"
+                              onClick={() => handleEditSave(event._id)}
+                            >
+                              <i className="fas fa-save"></i>
+                            </button>
+                            <button
+                              className="admin-users__delete-btn"
+                              title="Cancel"
+                              onClick={handleEditCancel}
+                            >
+                              <i className="fas fa-times"></i>
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              className="admin-users__edit-btn"
+                              title="Edit"
+                              onClick={() => handleEditClick(event)}
+                            >
+                              <i className="fas fa-edit"></i>
+                            </button>
+                            <button
+                              className="admin-users__delete-btn"
+                              title="Delete"
+                              onClick={() => handleDelete(event._id)}
+                              disabled={deletingId === event._id}
+                            >
+                              <i className="fas fa-trash"></i>
+                            </button>
+                          </>
+                        )}
                       </td>
                     </tr>
                   ))

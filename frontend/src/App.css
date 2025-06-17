@@ -57,7 +57,36 @@ body {
     opacity: 1;
   }
 }
+a {
+  color: #4ef37b;
+  text-decoration: none;
+} /* Add this to your CSS file */
+.add-event-form__input[type="file"] {
+  background: #232733;
+  border: 1.5px solid #4ef37b;
+  border-radius: 6px;
+  color: #fff;
+  padding: 12px 10px;
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+}
 
+.add-event-form__input[type="file"]::file-selector-button {
+  background: #181c23;
+  color: #fff;
+  border: 1px solid #4ef37b;
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.add-event-form__input[type="file"]::file-selector-button:hover {
+  background: #4ef37b;
+  color: #181c23;
+}
 .header {
   padding: 25px 50px 40px 0px;
   display: flex;
@@ -1623,12 +1652,12 @@ body {
   }
 }
 .add-event-form {
-  max-width: 500px;
+  max-width: 900px;
   margin: 40px auto;
-  background: #232733;
+  background: #181c23;
   border-radius: 14px;
   box-shadow: 0 2px 16px #0002;
-  padding: 32px 28px 24px 28px;
+  padding: 32px;
 }
 
 .add-event-form__title {
@@ -1654,14 +1683,14 @@ body {
 
 .add-event-form__input,
 .add-event-form__textarea {
-  background: #181c23;
-  border: 1.5px solid #4ef37b55;
-  border-radius: 7px;
+  border-radius: 8px;
+  border: 2px solid #23272f;
+  background: #23272f;
   color: #fff;
-  font-size: 1.08rem;
-  padding: 12px 14px;
+  padding: 10px 14px;
+  font-size: 16px;
   outline: none;
-  transition: border 0.18s;
+  box-shadow: 0 1px 4px #0002;
 }
 
 .add-event-form__input:focus,
@@ -1671,7 +1700,15 @@ body {
 }
 
 .add-event-form__textarea {
-  min-height: 80px;
+  min-height: 120px;
+  border-radius: 8px;
+  border: 2px solid #23272f;
+  background: #23272f;
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 1px 4px #0002;
   resize: vertical;
 }
 
