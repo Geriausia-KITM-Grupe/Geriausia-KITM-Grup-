@@ -11,7 +11,7 @@ const HeaderSearch = () => {
     // TODO finish When Events are Ready...
     if (query.trim()) {
       navigate(`/events?search=${encodeURIComponent(query)}`);
-      console.log("Searching for:", query);
+      setQuery("");
     }
   };
 

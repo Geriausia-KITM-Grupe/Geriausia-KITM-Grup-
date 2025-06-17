@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .confirm-modal {
@@ -16,44 +16,79 @@
   color: #fff;
   padding: 2rem 2.5rem;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 32px rgba(30, 64, 175, 0.12);
   min-width: 320px;
   max-width: 90vw;
   text-align: center;
+  font-family: inherit;
+  animation: pageFadeIn 0.5s;
 }
 
 .confirm-modal__message {
   margin-bottom: 2rem;
-  font-size: 1.1rem;
+  font-size: 1.13rem;
+  color: #d1d5db;
+  letter-spacing: 0.2px;
 }
 
 .confirm-modal__actions {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  margin-top: 10px;
 }
 
 .confirm-modal__btn {
-  padding: 0.6rem 1.5rem;
+  padding: 0.7rem 2rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 1.05rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+  box-shadow: 0 2px 8px #4ef37b22;
+  letter-spacing: 0.5px;
 }
 
 .confirm-modal__btn--confirm {
-  background: #4caf50;
-  color: #fff;
+  background: linear-gradient(90deg, #4ef37b 0%, #38c96b 100%);
+  color: #181c23;
 }
 .confirm-modal__btn--confirm:hover {
-  background: #388e3c;
+  background: linear-gradient(90deg, #38c96b 0%, #4ef37b 100%);
+  color: #232733;
+  transform: translateY(-2px) scale(1.04);
 }
 
 .confirm-modal__btn--cancel {
-  background: #e53935;
-  color: #fff;
+  background: #181c23;
+  color: #e53935;
+  border: 1.5px solid #e53935;
 }
 .confirm-modal__btn--cancel:hover {
-  background: #b71c1c;
+  background: #232733;
+  color: #fff;
+  border-color: #e53935;
+  transform: translateY(-2px) scale(1.04);
+}
+
+@media (max-width: 600px) {
+  .confirm-modal {
+    min-width: 85vw;
+    padding: 1.2rem 0.8rem;
+    border-radius: 10px;
+  }
+  .confirm-modal__message {
+    font-size: 1rem;
+  }
+  .confirm-modal__actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .confirm-modal__btn {
+    width: 100%;
+    padding: 0.7rem 0;
+    font-size: 1rem;
+    justify-content: center;
+  }
 }

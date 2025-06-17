@@ -121,7 +121,7 @@ const MyEvents = () => {
       setDeletingId(null);
     }
   };
-  console.log(events);
+
   return (
     <UserRoute>
       <ConfirmModal
@@ -179,9 +179,9 @@ const MyEvents = () => {
                           />
                         ) : (
                           <Link to={`/events/${event._id}`}>
-                            {event.title.length > 50
+                            {event.title && event.title.length > 50
                               ? event.title.slice(0, 50) + "..."
-                              : event.title}
+                              : event.title || ""}
                           </Link>
                         )}
                       </td>

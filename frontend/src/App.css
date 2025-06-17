@@ -667,6 +667,53 @@ a {
   font-size: 1.1em;
   margin-right: 3px;
 }
+.add-event-form__select {
+  background: #232733;
+  border: 2px solid #4ef37b;
+  border-radius: 8px;
+  color: #fff;
+  padding: 16px 18px;
+  width: 100%;
+  font-size: 1.08rem;
+  min-width: 200px;
+  min-height: 150px;
+  box-sizing: border-box;
+  outline: none;
+  appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px #0002;
+  scrollbar-width: thin;
+  scrollbar-color: #4ef37b #232733;
+}
+
+.add-event-form__select:focus {
+  border-color: #38c96b;
+  box-shadow: 0 0 0 2px #4ef37b55;
+}
+
+.add-event-form__select option {
+  background: #232733;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 4px;
+  margin: 2px 0;
+  transition: background 0.2s;
+}
+
+.add-event-form__select option:checked {
+  background: #4ef37b;
+  color: #232733;
+}
+
+.add-event-form__select::-webkit-scrollbar {
+  width: 8px;
+  background: #232733;
+}
+
+.add-event-form__select::-webkit-scrollbar-thumb {
+  background: #4ef37b;
+  border-radius: 4px;
+}
 
 /* Add margin-right to the arrow in the select */
 .event-list__filter-select,
@@ -1693,6 +1740,11 @@ a {
   box-shadow: 0 1px 4px #0002;
 }
 
+.add-event-form__input:focus,
+.add-event-form__textarea:focus {
+  border-color: #4ef37b;
+  background: #222633;
+}
 .add-event-form__input:focus,
 .add-event-form__textarea:focus {
   border-color: #4ef37b;

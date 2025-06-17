@@ -37,7 +37,7 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-          <div className="admin-dashboard__card">
+          {/* <div className="admin-dashboard__card">
             <i className="fas fa-chart-line admin-dashboard__icon"></i>
             <div>
               <h2>Analytics</h2>
@@ -56,7 +56,7 @@ const Dashboard = () => {
                 Go
               </a>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </AdminRoute>

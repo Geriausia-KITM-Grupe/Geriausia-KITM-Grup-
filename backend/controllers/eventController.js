@@ -91,7 +91,7 @@ const getApprovedEventsPaginated = asyncHandler(async (req, res) => {
 
   if (events.length === 0) {
     return res.status(404).json({
-      message: "Invalid event",
+      message: "Data Not Found",
       events: [],
       totalPages: 0,
       totalEvents: 0,

@@ -85,12 +85,6 @@ const EventList = () => {
     <section className="event-list">
       <h2 className="event-list__title">Upcoming Events</h2>
 
-      {error && (
-        <div style={{ color: "red", textAlign: "center", margin: "16px 0" }}>
-          {error}
-        </div>
-      )}
-
       <div className="event-list__filter-sort">
         <div className="event-list__sort">
           <label
@@ -153,6 +147,28 @@ const EventList = () => {
           </select>
         </div>
       </div>
+
+      {error && (
+        <div
+          style={{
+            color: "#fff",
+            background: "#e74c3c",
+            borderRadius: 6,
+            padding: "12px 20px",
+            textAlign: "center",
+            margin: "16px 0",
+            fontWeight: 500,
+            boxShadow: "0 2px 8px rgba(231,76,60,0.15)",
+            letterSpacing: 0.2,
+          }}
+        >
+          <i
+            className="fas fa-exclamation-circle"
+            style={{ marginRight: 8 }}
+          ></i>
+          {error}
+        </div>
+      )}
 
       <ul className="event-list__items">
         {loading ? (
