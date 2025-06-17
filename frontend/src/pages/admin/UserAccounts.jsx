@@ -98,9 +98,11 @@ export const UserAccounts = () => {
 
       // If the deleted user is the currently logged-in user, log them out and remove token
       if (user && String(user._id) === String(userToDelete)) {
+        console.log("Deleting logged-in user, removing from localStorage...");
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         navigate("/login");
+        window.location.reload();
       }
     } catch (err) {
       console.error("Delete user error:", err);
