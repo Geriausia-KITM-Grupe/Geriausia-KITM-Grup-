@@ -273,9 +273,8 @@ const ManageEvents = () => {
                       </td>
                       <td
                         style={{
-                          wordBreak: "break-word",
                           color: "#888",
-                          width: "200px",
+                          width: "180px",
                         }}
                       >
                         {editingId === event._id ? (
@@ -300,6 +299,7 @@ const ManageEvents = () => {
                       <td>
                         {editingId === event._id ? (
                           <input
+                            style={{ marginLeft: 20 }}
                             type="text"
                             className="add-event-form__input"
                             value={editEvent.location}
@@ -310,7 +310,6 @@ const ManageEvents = () => {
                                 location: e.target.value,
                               }))
                             }
-                            style={{ width: "120px" }}
                           />
                         ) : event.location?.length > 40 ? (
                           event.location.slice(0, 40) + "..."
@@ -321,6 +320,7 @@ const ManageEvents = () => {
                       <td>
                         {editingId === event._id ? (
                           <select
+                            className="add-event-form__select "
                             multiple
                             value={editEvent.category.map(String)}
                             onChange={(e) => {
@@ -373,6 +373,7 @@ const ManageEvents = () => {
                       <td>
                         {editingId === event._id ? (
                           <select
+                            className="event-list__sort-select"
                             value={
                               editEvent.approved === true
                                 ? "approved"
@@ -427,12 +428,18 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <>
                             <button
+                              className="admin-users__edit-btn"
                               onClick={() => handleSaveEdit(event._id)}
                               style={{ marginRight: "4px" }}
                             >
-                              Save
+                              <i className="fas fa-save"></i>
                             </button>
-                            <button onClick={handleCancelEdit}>Cancel</button>
+                            <button
+                              className="admin-users__delete-btn"
+                              onClick={handleCancelEdit}
+                            >
+                              <i className="fas fa-times"></i>
+                            </button>
                           </>
                         ) : (
                           <>
