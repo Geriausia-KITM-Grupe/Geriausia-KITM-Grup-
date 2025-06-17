@@ -19,10 +19,13 @@ const ManageEvents = () => {
     const fetchMyEvents = async () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
-        const response = await axios.get("http://localhost:3000/api/events", {
-          headers: { authorization: `Bearer ${user.token}` },
-          params: { createdBy: user._id },
-        });
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND}api/events`,
+          {
+            headers: { authorization: `Bearer ${user.token}` },
+            params: { createdBy: user._id },
+          }
+        );
         setEvents(response.data);
       } catch (err) {
         setError("Failed to fetch events.");
@@ -35,7 +38,7 @@ const ManageEvents = () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const response = await axios.get(
-          "http://localhost:3000/api/categories",
+          `${import.meta.env.VITE_BACKEND}api/categories`,
           {
             headers: { authorization: `Bearer ${user.token}` },
           }
@@ -106,7 +109,7 @@ const ManageEvents = () => {
         approvedValue = null;
       }
       await axios.put(
-        `http://localhost:3000/api/events/${eventId}`,
+        `${import.meta.env.VITE_BACKEND}api/events/${eventId}`,
         {
           title: editEvent.title,
           time: editEvent.time,
@@ -157,9 +160,12 @@ const ManageEvents = () => {
   const handleRemoveLike = async (eventId) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      await axios.delete(`http://localhost:3000/api/events/${eventId}`, {
-        headers: { authorization: `Bearer ${user.token}` },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND}api/events/${eventId}`,
+        {
+          headers: { authorization: `Bearer ${user.token}` },
+        }
+      );
       setEvents((prev) => prev.filter((e) => e._id !== eventId));
     } catch (err) {
       alert("Failed to delete event.");
@@ -202,7 +208,7 @@ const ManageEvents = () => {
                 {events.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={4}
+                      colSpan={8}
                       style={{ textAlign: "center", color: "#888" }}
                     >
                       No events found.
@@ -219,6 +225,7 @@ const ManageEvents = () => {
                           <input
                             type="text"
                             value={editEvent.title}
+                            maxLength={50}
                             onChange={(e) =>
                               setEditEvent((prev) => ({
                                 ...prev,
@@ -227,6 +234,8 @@ const ManageEvents = () => {
                             }
                             style={{ width: "120px" }}
                           />
+                        ) : event.title?.length > 50 ? (
+                          event.title.slice(0, 50) + "..."
                         ) : (
                           event.title
                         )}
@@ -266,6 +275,7 @@ const ManageEvents = () => {
                         {editingId === event._id ? (
                           <textarea
                             value={editEvent.description}
+                            maxLength={120}
                             onChange={(e) =>
                               setEditEvent((prev) => ({
                                 ...prev,
@@ -274,6 +284,8 @@ const ManageEvents = () => {
                             }
                             style={{ width: "100%" }}
                           />
+                        ) : event.description?.length > 120 ? (
+                          event.description.slice(0, 120) + "..."
                         ) : (
                           event.description
                         )}
@@ -283,6 +295,7 @@ const ManageEvents = () => {
                           <input
                             type="text"
                             value={editEvent.location}
+                            maxLength={40}
                             onChange={(e) =>
                               setEditEvent((prev) => ({
                                 ...prev,
@@ -291,6 +304,8 @@ const ManageEvents = () => {
                             }
                             style={{ width: "120px" }}
                           />
+                        ) : event.location?.length > 40 ? (
+                          event.location.slice(0, 40) + "..."
                         ) : (
                           event.location
                         )}
@@ -320,7 +335,6 @@ const ManageEvents = () => {
                         ) : Array.isArray(event.category) ? (
                           event.category
                             .map((cat) => {
-                              // If cat is an object, use cat.name; if it's an ID, find the name
                               if (typeof cat === "object" && cat !== null) {
                                 return cat.name;
                               }
@@ -330,6 +344,20 @@ const ManageEvents = () => {
                               return found ? found.name : cat;
                             })
                             .join(", ")
+                            .slice(0, 40) +
+                          (event.category
+                            .map((cat) => {
+                              if (typeof cat === "object" && cat !== null) {
+                                return cat.name;
+                              }
+                              const found = categories.find(
+                                (c) => c._id === cat
+                              );
+                              return found ? found.name : cat;
+                            })
+                            .join(", ").length > 40
+                            ? "..."
+                            : "")
                         ) : (
                           ""
                         )}

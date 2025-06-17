@@ -3,8 +3,8 @@ import axios from "axios";
 import UserRoute from "../../components/routes/UserRoute";
 import Alert from "../../components/Alert";
 
-const API_URL = "http://localhost:3000/api/events";
-const CATEGORY_URL = "http://localhost:3000/api/event-categories";
+const API_URL = `${import.meta.env.VITE_BACKEND}api/events`;
+const CATEGORY_URL = `${import.meta.env.VITE_BACKEND}api/event-categories`;
 
 const AddEvent = () => {
   const [form, setForm] = useState({

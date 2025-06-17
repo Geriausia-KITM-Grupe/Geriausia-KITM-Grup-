@@ -20,7 +20,9 @@ const MyFavorites = () => {
     const fetchFavorites = async () => {
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND}event-likes/${user._id}/favorites`,
+          `${import.meta.env.VITE_BACKEND}api/event-likes/${
+            user._id
+          }/favorites`,
           {
             headers: { authorization: `Bearer ${user.token}` },
           }
@@ -38,7 +40,7 @@ const MyFavorites = () => {
   const handleRemoveLike = async (eventId) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND}event-likes/${eventId}/removeLike`,
+        `${import.meta.env.VITE_BACKEND}api/event-likes/${eventId}/removeLike`,
         {
           headers: { authorization: `Bearer ${user.token}` },
         }

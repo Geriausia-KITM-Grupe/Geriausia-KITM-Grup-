@@ -19,7 +19,7 @@ const EventDetails = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`http://localhost:3000/api/events/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND}api/events/${id}`)
       .then((res) => setEvent(res.data))
       .catch(() => setError("Event not found."))
       .finally(() => setLoading(false));
@@ -34,7 +34,7 @@ const EventDetails = () => {
           ? { authorization: `Bearer ${user.token}` }
           : {};
         const { data } = await axios.get(
-          `http://localhost:3000/api/event-likes/${id}/likes`,
+          `${import.meta.env.VITE_BACKEND}api/event-likes/${id}/likes`,
           { headers }
         );
         setLikeCount(data.likeCount);
@@ -62,7 +62,7 @@ const EventDetails = () => {
     setLikeLoading(true);
     try {
       const { data } = await axios.post(
-        `http://localhost:3000/api/event-likes/${id}/like`,
+        `${import.meta.env.VITE_BACKEND}api/event-likes/${id}/like`,
         {},
         { headers: { authorization: `Bearer ${user.token}` } }
       );
@@ -85,10 +85,22 @@ const EventDetails = () => {
       <div className="event-details">
         <div className="shimmer-loader" style={{ width: 340, height: 599 }} />
         <div style={{ flex: 1, marginLeft: 48 }}>
-          <div className="shimmer-loader" style={{ width: 320, height: 40, marginBottom: 18 }} />
-          <div className="shimmer-loader" style={{ width: 220, height: 20, marginBottom: 12 }} />
-          <div className="shimmer-loader" style={{ width: 180, height: 20, marginBottom: 32 }} />
-          <div className="shimmer-loader" style={{ width: 320, height: 120, marginBottom: 18 }} />
+          <div
+            className="shimmer-loader"
+            style={{ width: 320, height: 40, marginBottom: 18 }}
+          />
+          <div
+            className="shimmer-loader"
+            style={{ width: 220, height: 20, marginBottom: 12 }}
+          />
+          <div
+            className="shimmer-loader"
+            style={{ width: 180, height: 20, marginBottom: 32 }}
+          />
+          <div
+            className="shimmer-loader"
+            style={{ width: 320, height: 120, marginBottom: 18 }}
+          />
         </div>
       </div>
     );
@@ -97,7 +109,9 @@ const EventDetails = () => {
   if (error || !event) {
     return (
       <div className="event-details">
-        <p style={{ color: "#e53935", fontWeight: 600 }}>{error || "Event not found."}</p>
+        <p style={{ color: "#e53935", fontWeight: 600 }}>
+          {error || "Event not found."}
+        </p>
         <button className="event-details__cta-btn" onClick={() => navigate(-1)}>
           Go Back
         </button>
@@ -115,12 +129,22 @@ const EventDetails = () => {
         />
       </div>
       <div className="event-details__content">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+          }}
+        >
           <h1 className="event-details__title">{event.title}</h1>
           <div style={{ display: "flex", alignItems: "center" }}>
             <span
               className="event-details__like-num"
-              style={{ marginRight: "0.5rem", fontSize: "1.2rem", color: "#fff" }}
+              style={{
+                marginRight: "0.5rem",
+                fontSize: "1.2rem",
+                color: "#fff",
+              }}
             >
               {likeCount}
             </span>
@@ -138,7 +162,13 @@ const EventDetails = () => {
               }}
               onClick={handleLike}
               disabled={likeLoading || !user.token}
-              title={user.token ? (liked ? "Remove like" : "Like this event") : "Login to like"}
+              title={
+                user.token
+                  ? liked
+                    ? "Remove like"
+                    : "Like this event"
+                  : "Login to like"
+              }
             >
               <i className="fas fa-heart" ref={heartRef}></i>
             </button>
@@ -166,17 +196,15 @@ const EventDetails = () => {
         <ul className="event-details__highlights">
           <li className="event-details__highlight">
             <i className="fas fa-user event-details__icon"></i>
-            Created by: {event.createdBy?.userName || event.createdBy?.email || "Unknown"}
+            Created by:{" "}
+            {event.createdBy?.userName || event.createdBy?.email || "Unknown"}
           </li>
           <li className="event-details__highlight">
             <i className="fas fa-info-circle event-details__icon"></i>
             Status: {event.approved ? "Approved" : "Pending Approval"}
           </li>
         </ul>
-        <button
-          className="event-details__cta-btn"
-          onClick={() => navigate(-1)}
-        >
+        <button className="event-details__cta-btn" onClick={() => navigate(-1)}>
           Back
         </button>
       </div>

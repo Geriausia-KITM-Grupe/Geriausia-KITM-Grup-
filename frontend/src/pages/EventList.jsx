@@ -17,7 +17,7 @@ const EventList = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`${import.meta.env.VITE_BACKEND}events/approved/paginated`, {
+      .get(`${import.meta.env.VITE_BACKEND}api/events/approved/paginated`, {
         params: {
           page,
           limit: itemsPerPage,
@@ -35,7 +35,7 @@ const EventList = () => {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKEND}event-categories`)
+      .get(`${import.meta.env.VITE_BACKEND}api/event-categories`)
       .then((res) => setCategories(res.data))
       .catch(() => setCategories([]));
   }, []);
