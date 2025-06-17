@@ -38,7 +38,7 @@ const ManageEvents = () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND}api/categories`,
+          `${import.meta.env.VITE_BACKEND}api/event-categories`,
           {
             headers: { authorization: `Bearer ${user.token}` },
           }
@@ -96,7 +96,7 @@ const ManageEvents = () => {
   const handleSaveEdit = async (eventId) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      // Robust conversion: handle both string and boolean
+      // Convert approved to boolean for backend
       let approvedValue;
       if (editEvent.approved === "approved" || editEvent.approved === true) {
         approvedValue = true;
@@ -106,9 +106,9 @@ const ManageEvents = () => {
       ) {
         approvedValue = false;
       } else {
-        approvedValue = null;
+        approvedValue = false; // default to false if unknown
       }
-      await axios.put(
+      const response = await axios.put(
         `${import.meta.env.VITE_BACKEND}api/events/${eventId}`,
         {
           title: editEvent.title,
@@ -122,18 +122,11 @@ const ManageEvents = () => {
         },
         { headers: { authorization: `Bearer ${user.token}` } }
       );
+      // Use backend response to update local state
       setEvents((prev) =>
         prev.map((e) =>
           e._id === eventId
-            ? {
-                ...e,
-                title: editEvent.title,
-                time: editEvent.time,
-                description: editEvent.description,
-                approved: approvedValue,
-                location: editEvent.location,
-                category: editEvent.category,
-              }
+            ? response.data.event // use the updated event from backend
             : e
         )
       );
@@ -373,7 +366,7 @@ const ManageEvents = () => {
                             onChange={(e) =>
                               setEditEvent((prev) => ({
                                 ...prev,
-                                approved: e.target.value,
+                                approved: e.target.value === "approved",
                               }))
                             }
                           >
