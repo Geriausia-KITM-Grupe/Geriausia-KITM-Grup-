@@ -24,13 +24,13 @@ export const UserAccounts = () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `${import.meta.env.BACKEND}api/users`,
+          `${import.meta.env.VITE_BACKEND}api/users`,
           {
             headers: { authorization: `Bearer ${token}` },
           }
         );
 
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
       } catch {
         // Handle error as needed
         setUsers([]);
@@ -53,7 +53,7 @@ export const UserAccounts = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       await axios.put(
-        `${import.meta.env.BACKEND}api/users/${selectedUser._id}`,
+        `${import.meta.env.VITE_BACKEND}api/users/${selectedUser._id}`,
         { role },
         {
           headers: {
@@ -84,16 +84,23 @@ export const UserAccounts = () => {
   };
 
   const confirmDelete = async () => {
-    const token = JSON.parse(localStorage.getItem("user"))?.token;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = user?.token;
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BACKEND}api/admin/user/${userToDelete}`,
+        `${import.meta.env.VITE_BACKEND}api/users/${userToDelete}`,
         {
           headers: { authorization: `Bearer ${token}` },
         }
       );
       setUsers((prev) => prev.filter((u) => u._id !== userToDelete));
       setAlert("User deleted successfully!");
+
+      // If the deleted user is the currently logged-in user, log them out
+      if (user && user._id === userToDelete) {
+        localStorage.removeItem("user");
+        navigate("/login");
+      }
     } catch {
       setAlert("Failed to delete user");
     }
@@ -111,7 +118,7 @@ export const UserAccounts = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     try {
       await axios.put(
-        `${import.meta.env.BACKEND}api/users/${userId}`,
+        `${import.meta.env.VITE_BACKEND}api/users/${userId}`,
         { status: !currentStatus },
         { headers: { authorization: `Bearer ${token}` } }
       );
@@ -164,10 +171,10 @@ export const UserAccounts = () => {
               <ShimmerLoader count={5} columns={6} mode="list" />
             ) : (
               <tbody>
-                {users.length === 0 ? (
+                {Array.isArray(users) && users.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       style={{ textAlign: "center", color: "#888" }}
                     >
                       List is empty
