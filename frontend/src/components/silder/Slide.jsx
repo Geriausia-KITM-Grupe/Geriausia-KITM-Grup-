@@ -1,5 +1,7 @@
-//const Slide = ({ event, cats }) => {  neaiski role mete cat errora 
-  const Slide = ({ event }) => {
+import { Link } from "react-router-dom";
+
+//const Slide = ({ event, cats }) => {  neaiski role mete cat errora
+const Slide = ({ event }) => {
   if (!event) {
     return <div className="event__error">No event data available.</div>;
   }
@@ -56,36 +58,54 @@
         </div>
       </section>
       <section className="event__cta-likes">
-        <button className="event__cta-btn">Lookup</button>
+        <Link to={`/events/${event._id}`} className="event__cta-btn">
+          Lookup
+        </Link>
       </section>
       <section className="event__share" aria-label="Share event">
         <span className="event__share-label">Share:</span>
         <div className="event__share-icons">
           <a
-            href="#"
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+              window.location.href
+            )}`}
             className="event__share-icon"
             aria-label="Share on Facebook"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <i className="fab fa-facebook-f"></i>
           </a>
           <a
-            href="#"
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+              window.location.href
+            )}&text=${encodeURIComponent(event.title || "")}`}
             className="event__share-icon"
             aria-label="Share on Twitter"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <i className="fab fa-twitter"></i>
           </a>
           <a
-            href="#"
+            href={`https://wa.me/?text=${encodeURIComponent(
+              event.title || ""
+            )}%20${encodeURIComponent(window.location.href)}`}
             className="event__share-icon"
             aria-label="Share on WhatsApp"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <i className="fab fa-whatsapp"></i>
           </a>
           <a
-            href="#"
+            href={`https://t.me/share/url?url=${encodeURIComponent(
+              window.location.href
+            )}&text=${encodeURIComponent(event.title || "")}`}
             className="event__share-icon"
             aria-label="Share on Telegram"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <i className="fab fa-telegram"></i>
           </a>
