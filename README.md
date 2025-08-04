@@ -21,7 +21,8 @@
 ## Setup Instructions
 
 1. Clone the repository:
-- git clone https://github.com/FanTaz1986/Egzas2025.git
+- git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
+- cd "Geriausia-KITM-Grup"
 2. Install dependencies:
 - Backend:
 - cd ../backend
@@ -38,3 +39,18 @@
 - Frontend:
 - cd ../frontend
 - npm run dev
+
+## How to Push, Make a Branch, and Push to Git
+
+1. Create a new branch:
+
+- git checkout -b your-branch-name
+
+2. Add and commit your changes:
+
+- git add .
+- git commit -m "Describe your changes"
+
+
+3. Push your branch to GitHub:
+- git push -u origin your-branch-name
