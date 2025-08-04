@@ -54,3 +54,19 @@
 
 3. Push your branch to GitHub:
 - git push -u origin your-branch-name
+
+
+
+PORT=3000
+MONGO_DB=mongodb+srv://lukasbajarun:egzaminas@cluster0.qfqxcmh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
+
+JWT_SALT=geRiausiAkITmGruPeuZkoDuoJ4Sl4pt4zodiK13k1m4noma5unk1au!
+NODE_ENV=development
+NOT_AUTHORIZED="User is not authorized to perform this action"
+NOT_AUTHORIZED_NO_TOKEN="User is not authorized to perform this action, no token provided"
+
+
+
+
+VITE_BACKEND=http://localhost:3000/
