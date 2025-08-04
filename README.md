@@ -21,8 +21,7 @@
 ## Setup Instructions
 
 1. Clone the repository:
-- git clone https://github.com/Geriausia-KITM-Grupe/Geriausia-KITM-Grup-.git
-- cd "Geriausia-KITM-Grup"
+- git clone https://github.com/FanTaz1986/Egzas2025.git
 2. Install dependencies:
 - Backend:
 - cd ../backend
@@ -39,34 +38,3 @@
 - Frontend:
 - cd ../frontend
 - npm run dev
-
-## How to Push, Make a Branch, and Push to Git
-
-1. Create a new branch:
-
-- git checkout -b your-branch-name
-
-2. Add and commit your changes:
-
-- git add .
-- git commit -m "Describe your changes"
-
-
-3. Push your branch to GitHub:
-- git push -u origin your-branch-name
-
-
-
-PORT=3000
-MONGO_DB=mongodb+srv://lukasbajarun:egzaminas@cluster0.qfqxcmh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
-
-JWT_SALT=geRiausiAkITmGruPeuZkoDuoJ4Sl4pt4zodiK13k1m4noma5unk1au!
-NODE_ENV=development
-NOT_AUTHORIZED="User is not authorized to perform this action"
-NOT_AUTHORIZED_NO_TOKEN="User is not authorized to perform this action, no token provided"
-
-
-
-
-VITE_BACKEND=http://localhost:3000/
